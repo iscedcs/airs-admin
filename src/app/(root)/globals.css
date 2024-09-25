@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+    --primary: 51 100% 15%;
+    --primary-foreground: 54 40% 94%;
+    --secondary: 53.9 59.6% 80.6%;
+    --secondary-foreground: 24 9.8% 10%;
+    --muted: 54 40% 94%;
+    --muted-foreground: 25 5.3% 44.7%;
+    --accent: 54 40% 94%;
+    --accent-foreground: 24 9.8% 10%;
+    --destructive: 0 50% 80%;
+    --destructive-foreground: 6.2 100% 60.2%;
+    --awesome: 140 52.2% 54.9%;
+    --awesome-foreground: 119.2 100% 14.1%;
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --ring: 51 100% 15%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 54 40% 94%;
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 54 40% 94%;
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 54 40% 94%;
+    --primary: 49 100% 36%;
+    --primary-foreground: 54 40% 94%;
+    --secondary: 51 100% 15%;
+    --secondary-foreground: 54 40% 94%;
+    --muted: 51 100% 15%;
+    --muted-foreground: 24 5.4% 63.9%;
+    --accent: 51 100% 15%;
+    --accent-foreground: 54 40% 94%;
+    --destructive: 60 50% 80%;
+    --destructive-foreground: 6.2 100% 60.2%;
+    --awesome: 119.2 100% 14.1%;
+    --awesome-foreground: 140 52.2% 54.9%;
+    --border: 51 100% 15%;
+    --input: 51 100% 15%;
+    --ring: 49 100% 36%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+}
+
+/* styles/globals.css */
+
+
+.slide.active {
+  display: block;
+  opacity: 1;
+}
+
+.indicator.active {
+  width: 50px;
+  height: 10px;
+  border-radius: 20px;
+}
+
+.spin-button-none::-webkit-inner-spin-button,
+.spin-button-none::-webkit-outer-spin-button {
+  appearance: none;
+}
