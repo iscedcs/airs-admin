@@ -18,8 +18,8 @@ export default async function Agents({
     page,
     limit,
     blacklisted: false,
-    type: "agents",
   });
+  console.log({ agents });
 
   const start = (Number(page) - 1) * Number(limit);
   const end = start + Number(limit);

@@ -4,7 +4,7 @@ import AgentSearchBar from "@/components/ui/agent-search-bar";
 import { buttonVariants } from "@/components/ui/button";
 import { vehiclesColumns } from "@/components/ui/table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
-import { getVehicles } from "@/lib/controllers/vehicle-controller";
+import { getVehicles } from "@/lib/controller/vehicle-controller";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import { getServerSession } from "next-auth";

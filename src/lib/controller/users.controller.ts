@@ -6,7 +6,6 @@ import { options } from "@/app/api/auth/options";
 export const getUsers = async (o: {
   page?: string;
   limit?: string;
-  type?: "admins" | "agents";
   blacklisted?: boolean;
 }) => {
   const session = await getServerSession(options);
@@ -15,19 +14,25 @@ export const getUsers = async (o: {
     "api-secret": process.env.API_SECRET || "",
     Authorization: `Bearer ${session?.user.access_token}`,
   };
-  const url = `${API}${URLS.user}${o.type ? "/" + o.type : ""}?page=${
-    o.page ?? 1
-  }&limit=${o.limit ?? 15}${
-    o.blacklisted ? "&is_blacklisted=" + String(o.blacklisted) : ""
-  }`;
+
+  const url = `${API}${URLS.user}/agents?page=${o.page ?? 1}&limit=${
+    o.limit ?? 15
+  }${o.blacklisted ? "&is_blacklisted=" + String(o.blacklisted) : ""}`;
   const res = await fetch(url, { headers, next: { revalidate: 0 } });
+  console.log({ url, res, o });
   const result = await res.json();
-  if (!result.status) return undefined;
-  const admins: {
-    rows: IAdmin[];
-    meta: { total: number; total_pages: number; page: number };
-  } = result.data;
-  return admins;
+  console.log({ result });
+  try {
+    if (!result.status) return undefined;
+    const admins: {
+      rows: IAdmin[];
+      meta: { total: number; total_pages: number; page: number };
+    } = result.data;
+
+    return admins;
+  } catch (error) {
+    console.log({ error: "Something went wrong" }, error);
+  }
 };
 export const getUser = async (id: string) => {
   try {
@@ -47,3 +52,5 @@ export const getUser = async (id: string) => {
     return null;
   }
 };
+
+// export getAgents = async
