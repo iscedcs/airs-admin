@@ -1,5 +1,5 @@
 import ViewVehicleDetails from "@/components/pages/vehicle/view-vehicle-details";
-import { getVehicleById } from "@/lib/controllers/vehicle-controller";
+import { getVehicleById } from "@/lib/controller/vehicle-controller";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {

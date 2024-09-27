@@ -29,19 +29,6 @@ export default async function Vehicles({
           <>
                <div className="flex items-center justify-between font-bold uppercase">
                     <div className="shrink-0 grow-0">VEHICLES</div>
-                    {session.user.role?.toLowerCase() !== "agent" &&
-                         session.user.role?.toLowerCase() !==
-                              "green_engine" && (
-                              <div className="shrink-0 grow-0">
-                                   <Link
-                                        href={"/vehicles/new-vehicle"}
-                                        className={cn(buttonVariants(), "")}
-                                   >
-                                        <Plus className="mr-2 h-4 w-4 shrink-0" />
-                                        NEW VEHICLE
-                                   </Link>
-                              </div>
-                         )}
                </div>
                <div className="inline-flex h-10 w-full items-end justify-start border-b border-primary bg-background text-muted-foreground">
                     <div className="inline-flex items-center justify-center whitespace-nowrap border-primary px-3 py-1.5 text-sm font-bold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-2 data-[state=active]:text-foreground data-[state=active]:shadow-sm">

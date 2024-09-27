@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <div>
       <Sidebar />
-      {children}
+      <div className="ml-[208px]">{children}</div>
     </div>
   );
 }

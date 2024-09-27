@@ -53,7 +53,7 @@ const ProtectedPage: React.FC<ProtectedPageProps> = () => {
   ];
 
   return (
-    <div className="ml-[208px]">
+    <div className="">
       <>
         <div className="h-16 w-full shrink-0 bg-secondary/60 backdrop-blur-sm">
           <MaxWidthWrapper className="p-2">
