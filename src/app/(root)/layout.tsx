@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Sidebar from "@/components/layout/sidebar";
+import Navbar from "@/components/layout/navbar";
+
 
 export const metadata: Metadata = {
   title: "TransPay - Seamless levy payment.",
@@ -17,9 +19,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <Sidebar />
-      <div className="ml-[208px]">{children}</div>
+    <div className="">
+      <Navbar />
+      <div className="">
+        <Sidebar />
+        <div className=" pt-[60px] ml-[208px]">{children}</div>
+      </div>
     </div>
   );
 }
