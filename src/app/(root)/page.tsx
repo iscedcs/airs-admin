@@ -15,12 +15,14 @@ import { DataTable } from "@/components/ui/table/data-table";
 import { getUser } from "@/lib/controller/users.controller";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function DashboardAdmin() {
   const session = await getServerSession(options);
   const user = await getUser(session?.user.id!);
-  if (!session || !session.user || !session.user.id)
-    return <FormError message="You are not authorized to view this page" />;
+  if (!session || !session.user || !session.user.id) {
+    redirect("/sign-in");
+  }
   const userId = session.user.id;
   const allAgents = await allUsers({ role: "AGENT" });
   const allVehicles = await allVehiclesCount();
@@ -30,6 +32,7 @@ export default async function DashboardAdmin() {
     myAgents.success?.data.map(
       (item) => (item.meta as { user: any; newUser: any })?.newUser
     );
+
   return (
     <div className="p-5">
       <div className="">
