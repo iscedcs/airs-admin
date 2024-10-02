@@ -12,7 +12,6 @@ export default function DashboardLayout({
 }) {
 	return (
 		<div className=''>
-			<Navbar />
 			<div className=''>
 				<div className='pt-20'>{children}</div>
 			</div>
