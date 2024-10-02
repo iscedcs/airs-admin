@@ -101,7 +101,7 @@ export const SIDEBAR_LINKS_ADMIN = [
   },
   {
     title: "Vehicles",
-    href: "/vehicles?page=1&limit=15",
+    href: "/vehicles",
     icon: driverIcon,
   },
   // {
