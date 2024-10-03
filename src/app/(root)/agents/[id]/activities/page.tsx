@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import React from 'react';
 import ActivityCard from '@/components/shared/activity-card';
-import { getAllActivities } from '@/lib/controllers/activity.controller';
+import { getAllActivities } from "@/lib/controller/activity.controller";
 import { notFound } from 'next/navigation';
 import ActivityList from '@/components/pages/activities/activity-list';
 

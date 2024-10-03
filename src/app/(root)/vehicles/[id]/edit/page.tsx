@@ -1,5 +1,5 @@
 import { UpdateVehicleForm } from "@/components/forms/update-vehicle-form";
-import { getVehicleById } from "@/lib/controllers/vehicle-controller";
+import { getVehicleById } from "@/lib/controller/vehicle-controller";
 import { notFound } from "next/navigation";
 
 export const revalidate = 0;

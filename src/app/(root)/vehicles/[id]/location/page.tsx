@@ -1,24 +1,24 @@
-import { getAllTrackerLocation } from "@/lib/controllers/tracker.controller";
-import { getVehicleById } from "@/lib/controllers/vehicle-controller";
+import { getAllTrackerLocation } from "@/lib/controller/tracker.controller";
+import { getVehicleById } from "@/lib/controller/vehicle-controller";
 import { notFound } from "next/navigation";
 import MapView from "./map-view";
 
 export default async function LocationPage({
-     params,
+  params,
 }: {
-     params: { id: string };
+  params: { id: string };
 }) {
-     const vehicle = await getVehicleById(params.id);
-     const trackerLocation = await getAllTrackerLocation([
-          vehicle?.fairFlexImei ?? "",
-     ]);
+  const vehicle = await getVehicleById(params.id);
+  const trackerLocation = await getAllTrackerLocation([
+    vehicle?.fairFlexImei ?? "",
+  ]);
 
-     console.log({ trackerLocation });
+  console.log({ trackerLocation });
 
-     if (!vehicle) return notFound();
-     return (
-          <div className="flex flex-col">
-               <MapView tracker={trackerLocation[0]} vehicle={vehicle} />
-          </div>
-     );
+  if (!vehicle) return notFound();
+  return (
+    <div className="flex flex-col">
+      <MapView tracker={trackerLocation[0]} vehicle={vehicle} />
+    </div>
+  );
 }

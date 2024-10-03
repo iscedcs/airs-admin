@@ -1,6 +1,6 @@
 import { paymentColumns } from '@/components/ui/table/columns';
 import { DataTable } from '@/components/ui/table/data-table';
-import { getVehicleById } from '@/lib/controllers/vehicle-controller';
+import { getVehicleById } from "@/lib/controller/vehicle-controller";
 import { notFound } from 'next/navigation';
 import React from 'react';
 

@@ -29,6 +29,9 @@ import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "../dialog";
 import Pill from "../pill";
 import { DataTableColumnHeader } from "./data-column-table-header";
 import { UpdateBitsForm } from "@/components/forms/update-bits-form";
+import { UpdateSettingsForm } from "@/components/forms/update-settings-form";
+import DeleteWaiverButton from "@/components/shared/delete-buttons/delete-waiver-button";
+import UpdateWaiverButton from "@/components/role/rider/update-waiver-button";
 
 export const debtColumns: ColumnDef<IVehiclePayment>[] = [
   {

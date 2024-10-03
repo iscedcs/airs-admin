@@ -5,11 +5,11 @@ import {
 } from '@/components/ui/table/columns';
 import { DataTable } from '@/components/ui/table/data-table';
 import { DRIVER_TABLE, WAIVER_STATUS } from '@/lib/consts';
-import { getVehicleSummary } from '@/lib/controllers/vehicle-controller';
+import { getVehicleSummary } from "@/lib/controller/vehicle-controller";
 import {
-	getVehicleWaiver,
-	getVehicleWaiverProtected,
-} from '@/lib/controllers/waiver.controller';
+  getVehicleWaiver,
+  getVehicleWaiverProtected,
+} from "@/lib/controller/waiver.controller";
 import { addIcon, successIcon } from '@/lib/icons';
 import Link from 'next/link';
 import React from 'react';

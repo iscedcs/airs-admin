@@ -2196,3 +2196,19 @@ export const HOW_IT_WORKS: {
       "Authorities can monitor the entire process and generate detailed reports for auditing and analysis.",
   },
 ];
+
+export const VEHICLE_CATEGORIES = [
+  "TRICYCLE",
+  "SHUTTLE_BUS",
+  "BUS_INTRASTATE",
+  "TRUCKS",
+  "BUS_INTERSTATE",
+];
+
+export const VEHICLE_CATEGORIES_PRICE = [
+  { name: "TRICYCLE", price: 2000 },
+  { name: "SHUTTLE_BUS", price: 2400 },
+  { name: "BUS_INTRASTATE", price: 3000 },
+  { name: "TRUCKS", price: 3000 },
+  { name: "BUS_INTERSTATE", price: 4000 },
+];

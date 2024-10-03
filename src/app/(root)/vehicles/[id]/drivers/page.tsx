@@ -1,15 +1,15 @@
-import { getVehicleById } from '@/lib/controllers/vehicle-controller';
+import { getVehicleById } from "@/lib/controller/vehicle-controller";
 
 export default async function VehicleDriversPage({
-	params,
+  params,
 }: {
-	params: { id: string };
+  params: { id: string };
 }) {
-	const vehicle = await getVehicleById(params.id);
-	// const drivers = vehicle?.Drivers;
-	return (
-		<div className='p-3 md:p-5 w-full'>
-			{/* <div className='flex flex-col gap-2 mb-20'>
+  const vehicle = await getVehicleById(params.id);
+  // const drivers = vehicle?.Drivers;
+  return (
+    <div className="p-3 md:p-5 w-full">
+      {/* <div className='flex flex-col gap-2 mb-20'>
 				<div className='flex justify-between py-2'>
 					<div className='shrink-0 grow-0 text-title1Bold'>
 						Drivers
@@ -31,6 +31,6 @@ export default async function VehicleDriversPage({
 					/>
 				</div>
 			</div> */}
-		</div>
-	);
+    </div>
+  );
 }
