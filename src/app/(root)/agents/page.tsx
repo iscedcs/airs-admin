@@ -27,6 +27,21 @@ export default async function Agents({
     <div className="flex h-full w-full flex-col p-5">
       <div className="flex items-center justify-between font-bold uppercase">
         <div className="shrink-0 grow-0">Agents</div>
+        <div className="shrink-0 grow-0">
+          <Button
+            className="justify-start rounded-xl bg-primary-800 text-white"
+            asChild
+            variant={"default"}
+          >
+            <Link
+              href={"/agents/new-agent"}
+              className="shrink-0 whitespace-nowrap"
+            >
+              <div className="mr-2 h-4 w-4 shrink-0">{addIcon}</div>
+              New Agent
+            </Link>
+          </Button>
+        </div>
       </div>
       <div className="flex flex-col gap-5">
         <Tabs defaultValue="all" className="w-full">
