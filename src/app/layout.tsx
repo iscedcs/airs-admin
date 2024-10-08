@@ -4,7 +4,7 @@ import NextAuthProvider from "@/lib/providers/nextauth-provider";
 import Provider from "@/lib/session-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Lato } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
@@ -18,11 +18,13 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: "TransPay - Seamless levy payment.",
   description: "Powered By ISCE",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function HomeLayout({

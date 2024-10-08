@@ -6,11 +6,6 @@ import Navbar from "@/components/layout/navbar";
 export const metadata: Metadata = {
   title: "TransPay - Seamless levy payment.",
   description: "Powered By ISCE",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-  },
 };
 
 export default function RootLayout({
