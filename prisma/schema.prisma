@@ -163,6 +163,7 @@ model vehicle_transactions {
   in_reference          String                                          @db.VarChar
   out_reference         String?                                         @db.VarChar
   description           String                                          @default("") @db.VarChar
+  paymentType           vehicle_transactions_paymenttype_enum           @default(CVOF)
   transaction_type      vehicle_transactions_transaction_type_enum      @default(REVENUE)
   transaction_category  vehicle_transactions_transaction_category_enum?
   sender                Json
@@ -179,7 +180,6 @@ model vehicle_transactions {
   status                String                                          @db.VarChar
   meta                  Json?
   vehicleId             String?                                         @db.Uuid
-  paymentType           vehicle_transactions_paymenttype_enum           @default(CVOF)
   vehicles              vehicles?                                       @relation(fields: [vehicleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_3fc08f036538fd0216d5b0bc71d")
 }
 
@@ -207,42 +207,44 @@ model vehicle_wallets {
   amount_owed           Decimal   @default(0) @db.Decimal
   net_total             Decimal   @default(0) @db.Decimal
   next_transaction_date DateTime  @default(dbgenerated("('now'::text)::date")) @db.Date
-  vehicle_id            String?   @unique(map: "REL_f107a1e0dda676643eb275f70e") @db.Uuid
   cvof_balance          Decimal   @default(0) @db.Decimal
   fareflex_balance      Decimal   @default(0) @db.Decimal
   isce_balance          Decimal   @default(0) @db.Decimal
   cvof_owing            Decimal   @default(0) @db.Decimal
   fareflex_owing        Decimal   @default(0) @db.Decimal
   isce_owing            Decimal   @default(0) @db.Decimal
+  vehicle_id            String?   @unique(map: "REL_f107a1e0dda676643eb275f70e") @db.Uuid
   vehicles              vehicles? @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f107a1e0dda676643eb275f70e3")
 }
 
 model vehicles {
-  id                   String                 @id(map: "PK_18d8646b59304dce4af3a9e35b6") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created_at           DateTime               @default(now()) @db.Timestamp(6)
-  updated_at           DateTime               @default(now()) @db.Timestamp(6)
-  deleted_at           DateTime?              @db.Timestamp(6)
-  color                String?                @db.VarChar
-  category             String?                @db.VarChar
-  plate_number         String                 @db.VarChar
-  image                String?                @db.VarChar
-  blacklisted          Boolean                @default(false)
-  status               vehicles_status_enum   @default(ACTIVE)
-  type                 String?                @db.VarChar
-  vin                  String?                @db.VarChar
-  barcode              String?                @db.VarChar
-  fairFlexImei         String?                @db.VarChar
-  owner                Json
-  asin_number          String                 @db.VarChar
-  t_code               String                 @db.VarChar
-  PaymentNotifications PaymentNotifications[]
-  audit_trails         audit_trails[]
-  drivers              drivers[]
-  vehicle_fines        vehicle_fines[]
-  vehicle_trackers     vehicle_trackers?
-  vehicle_transactions vehicle_transactions[]
-  vehicle_waivers      vehicle_waivers[]
-  vehicle_wallets      vehicle_wallets?
+  id                       String                     @id(map: "PK_18d8646b59304dce4af3a9e35b6") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at               DateTime                   @default(now()) @db.Timestamp(6)
+  updated_at               DateTime                   @default(now()) @db.Timestamp(6)
+  deleted_at               DateTime?                  @db.Timestamp(6)
+  color                    String?                    @db.VarChar
+  category                 String?                    @db.VarChar
+  plate_number             String?                    @db.VarChar
+  image                    String?                    @db.VarChar
+  blacklisted              Boolean                    @default(false)
+  status                   vehicles_status_enum       @default(ACTIVE)
+  type                     String?                    @db.VarChar
+  vin                      String?                    @db.VarChar
+  barcode                  String?                    @db.VarChar
+  fairFlexImei             String?                    @db.VarChar
+  owner                    Json
+  asin_number              String                     @db.VarChar
+  t_code                   String                     @db.VarChar
+  security_code            String?                    @unique(map: "UQ_dd7fcb8f1cfdf09016c72d34b42") @db.VarChar(5)
+  LivePaymentNotifications LivePaymentNotifications[]
+  PaymentNotifications     PaymentNotifications[]
+  audit_trails             audit_trails[]
+  drivers                  drivers[]
+  vehicle_fines            vehicle_fines[]
+  vehicle_trackers         vehicle_trackers?
+  vehicle_transactions     vehicle_transactions[]
+  vehicle_waivers          vehicle_waivers[]
+  vehicle_wallets          vehicle_wallets?
 }
 
 model whitelisted_ips {
@@ -251,6 +253,36 @@ model whitelisted_ips {
   updated_at DateTime  @default(now()) @db.Timestamp(6)
   deleted_at DateTime? @db.Timestamp(6)
   ip         String    @unique(map: "UQ_2adc1af7db267995ab9719ab6c3") @db.VarChar
+}
+
+model LivePaymentNotifications {
+  id                String    @id(map: "PK_5e68b8e6987bea6562bd0eda8ad") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at        DateTime  @default(now()) @db.Timestamp(6)
+  updated_at        DateTime  @default(now()) @db.Timestamp(6)
+  deleted_at        DateTime? @db.Timestamp(6)
+  payment_reference String    @db.VarChar(100)
+  customer_name     String    @db.VarChar(255)
+  payment_date      DateTime  @db.Timestamp(6)
+  tcode             String    @db.VarChar(50)
+  revenue_name      String    @db.VarChar(255)
+  revenue_code      String    @db.VarChar(50)
+  amount            Decimal   @db.Decimal(15, 2)
+  vehicleId         String?   @db.Uuid
+  vehicles          vehicles? @relation(fields: [vehicleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_46e8131c32b360d51bbcd2ba34b")
+}
+
+model duplicate_payment_logs {
+  id                String    @id(map: "PK_217cc2ef4388dff3c062b830f0e") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at        DateTime  @default(now()) @db.Timestamp(6)
+  updated_at        DateTime  @default(now()) @db.Timestamp(6)
+  deleted_at        DateTime? @db.Timestamp(6)
+  payment_reference String    @db.VarChar(100)
+  customer_name     String    @db.VarChar(255)
+  payment_date      DateTime  @db.Timestamp(6)
+  tcode             String    @db.VarChar(50)
+  revenue_name      String    @db.VarChar(255)
+  revenue_code      String    @db.VarChar(50)
+  amount            Decimal   @db.Decimal(15, 2)
 }
 
 enum drivers_status_enum {
@@ -263,6 +295,8 @@ enum users_role_enum {
   ADMIN
   AGENT
   GREEN_ENGINE
+  COMPLIANCE
+  SECURITY
   USER
 }
 
@@ -278,6 +312,7 @@ enum vehicle_transactions_transaction_category_enum {
   BUS_INTRASTATE
   TRUCKS
   BUS_INTERSTATE
+  OTHERS
 }
 
 enum vehicle_transactions_transaction_type_enum {

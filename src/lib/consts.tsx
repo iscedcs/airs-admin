@@ -2212,3 +2212,12 @@ export const VEHICLE_CATEGORIES_PRICE = [
   { name: "TRUCKS", price: 3000 },
   { name: "BUS_INTERSTATE", price: 4000 },
 ];
+
+export enum VehicleValues {
+  TRICYCLE = 333,
+  SHUTTLE_BUS = 400,
+  BUS_INTRASTATE = 500,
+  TRUCKS = 500,
+  BUS_INTERSTATE = 666,
+  OTHERS = 333,
+}

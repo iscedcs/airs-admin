@@ -1,18 +1,24 @@
+import { VehicleValues } from "@/lib/consts";
+import { PaymentNotifications } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import {
+  addDays,
+  addHours,
   differenceInDays,
   differenceInMonths,
   differenceInWeeks,
   differenceInYears,
   format,
-  startOfYear,
-  subYears,
   getHours,
-  startOfDay,
-  addHours,
-  addDays,
-  isEqual,
+  getWeek,
+  getYear,
   isBefore,
+  isSunday,
+  startOfDay,
+  startOfMonth,
+  startOfYear,
+  subDays,
+  subYears,
 } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
@@ -609,3 +615,95 @@ export function isEmpty(value: string | any[] | object): boolean {
 
 export const isOwing = (date: string) =>
   isBefore(addDays(new Date(date), 1), new Date());
+
+export function formatChartData(
+  transactions: PaymentNotifications[],
+  filterType: FilterType
+): ChartDataPoint[] {
+  const groupedData = transactions.reduce((acc, transaction) => {
+    let key: string;
+    const date = new Date(transaction.payment_date);
+
+    switch (filterType) {
+      case "day":
+        key = format(startOfDay(date), "yyyy-MM-dd");
+        break;
+      case "week":
+        key = `Week ${getWeek(date)}`;
+        break;
+      case "month":
+        key = format(startOfMonth(date), "MMM yyyy");
+        break;
+      case "year":
+        key = getYear(date).toString();
+        break;
+    }
+
+    if (!acc[key]) {
+      acc[key] = 0;
+    }
+    acc[key] += Number(transaction.amount);
+    return acc;
+  }, {} as Record<string, number>);
+
+  return Object.entries(groupedData).map(([name, total]) => ({
+    name,
+    total: Number(total.toFixed(2)), // Ensure we don't have too many decimal places
+  }));
+}
+
+export function formatCurrency(value: number): string {
+  let formattedValue: string;
+
+  if (value >= 1_000_000_000) {
+    // Format to billions (B)
+    formattedValue = `₦${(value / 1_000_000_000).toFixed(2)}B`;
+  } else if (value >= 1_000_000) {
+    // Format to millions (M)
+    formattedValue = `₦${(value / 1_000_000).toFixed(2)}M`;
+  } else if (value >= 1_000) {
+    // Format to thousands (K)
+    formattedValue = `₦${(value / 1_000).toFixed(2)}K`;
+  } else {
+    // Format for values less than 1,000
+    formattedValue = `₦${value.toFixed(2)}`;
+  }
+
+  return formattedValue;
+}
+
+export function getNextPaymentDate(
+  cvofBalance: number,
+  cvofOwing: number,
+  vehicleCategory: keyof typeof VehicleValues
+): Date {
+  const today = new Date();
+  let nextPaymentDate = new Date(today);
+
+  // Get the fee amount for the vehicle category
+  const dailyFee = VehicleValues[vehicleCategory];
+
+  console.log({ cvofBalance, cvofOwing, vehicleCategory, dailyFee });
+
+  if (cvofOwing > 0) {
+    // Vehicle is owing, calculate how many days in the past
+    const daysOwing = Math.floor(cvofOwing / dailyFee);
+    nextPaymentDate = subDays(today, daysOwing); // Set to past date
+
+    // Skip Sundays
+    while (isSunday(nextPaymentDate)) {
+      nextPaymentDate = subDays(nextPaymentDate, 1);
+    }
+  } else if (cvofBalance > 0) {
+    // Vehicle has paid, calculate how many days into the future
+    const daysPaid = Math.floor(cvofBalance / dailyFee);
+    nextPaymentDate = addDays(today, daysPaid); // Set to future date
+
+    // Skip Sundays
+    while (isSunday(nextPaymentDate)) {
+      nextPaymentDate = addDays(nextPaymentDate, 1);
+    }
+  }
+
+  return nextPaymentDate;
+}
