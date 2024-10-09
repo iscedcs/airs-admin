@@ -12,8 +12,7 @@
     "react-hooks/exhaustive-deps": "off",
     "prefer-const": "off",
     "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-duplicate-enum-values": "off",
     "no-var": "off"
   }
 }
-
-
