@@ -18,7 +18,7 @@ export default function RootLayout({
       <Navbar />
       <div className="">
         <Sidebar />
-        <div className=" pt-[60px] ml-[208px]">{children}</div>
+        <div className=" pt-[60px] md:ml-[208px]">{children}</div>
       </div>
     </div>
   );
