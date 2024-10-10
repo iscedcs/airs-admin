@@ -75,7 +75,7 @@ export default async function ViewRegistrar({
               </div>
               <div className="flex items-center justify-between gap-3">
                 <div className="font-bold">Date:</div>
-                {format(audit?.created_at!, "MMM dd, h:mm a")}
+                {/* {format(audit?.created_at!, "MMM dd, h:mm a")} */}
               </div>
               <div className="flex items-center justify-between gap-3">
                 <div className="font-bold">Action:</div>

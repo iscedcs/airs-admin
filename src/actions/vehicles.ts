@@ -1,11 +1,86 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { vehicle_transactions_transaction_category_enum } from "@prisma/client";
+import {
+  Prisma,
+  vehicle_transactions_transaction_category_enum,
+} from "@prisma/client";
+
+
+
 
 interface FetchVehicleParams {
      page?: number;
      pageSize?: number;
+}
+
+
+export type VehicleFilter = {
+  status?: "INACTIVE" | "ACTIVE" | "CLEARED" | "OWING";
+  category?: string;
+  type?: string;
+  search?: string;
+};
+
+export async function getVehicles(
+  page: number = 1,
+  pageSize: number = 10,
+  filter: VehicleFilter = {}
+) {
+  const where: Prisma.vehiclesWhereInput = {};
+
+  if (filter.status) {
+    where.status = filter.status;
+  }
+
+  if (filter.category) {
+    where.category = filter.category;
+  }
+
+  if (filter.type) {
+    where.type = filter.type;
+  }
+
+  if (filter.search) {
+    where.OR = [
+      { owner: { path: ["name"], string_contains: filter.search } },
+      { plate_number: { contains: filter.search, mode: "insensitive" } },
+      { vin: { contains: filter.search, mode: "insensitive" } },
+      { asin_number: { contains: filter.search, mode: "insensitive" } },
+    ];
+  }
+
+  const [vehicles, totalCount] = await db.$transaction([
+    db.vehicles.findMany({
+      where,
+      select: {
+        id: true,
+        plate_number: true,
+        color: true,
+        category: true,
+        type: true,
+        status: true,
+        asin_number: true,
+        t_code: true,
+        created_at: true,
+        owner: true,
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: { created_at: "desc" },
+    }),
+    db.vehicles.count({ where }),
+  ]);
+
+  return {
+    vehicles,
+    pagination: {
+      page,
+      pageSize,
+      totalCount,
+      totalPages: Math.ceil(totalCount / pageSize),
+    },
+  };
 }
 
 export const allVehicles = async ({

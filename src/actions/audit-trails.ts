@@ -59,6 +59,7 @@ export const getVehicleRegistrar = async (plate_number: string) => {
         },
       },
     });
+    console.log({ audit });
     return audit;
   } catch (error) {
     return undefined;
