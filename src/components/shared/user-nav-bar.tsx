@@ -15,6 +15,7 @@ import Link from "next/link";
 import {
      MANAGE_SIDEBAR_LINKS,
      SIDEBAR_LINKS,
+     SIDEBAR_LINKS_ADMIN,
      SIDEBAR_LINKS_AGENT,
 } from "@/lib/consts";
 import { getInitials } from "@/lib/utils";
@@ -90,7 +91,7 @@ export function UserNav({ user }: { user: IUserExtended }) {
                      </Link>
                    </DropdownMenuItem>
                  ))
-               : SIDEBAR_LINKS_AGENT.map((link, k) => (
+               : SIDEBAR_LINKS_ADMIN.map((link, k) => (
                    <DropdownMenuItem className="md:hidden" asChild key={k}>
                      <Link href={link.href}>
                        {link.title}
