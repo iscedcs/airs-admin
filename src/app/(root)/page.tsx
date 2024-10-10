@@ -57,7 +57,7 @@ export default async function DashboardAdmin() {
             </CardContent>
           </Card>
         </Link>
-        <Link href={"/dashboard/my-agents?page=1&limit=15"}>
+        <Link href={"/my-agents?page=1&limit=15"}>
           <Card>
             <CardHeader>
               <CardTitle>Registered Agents</CardTitle>
