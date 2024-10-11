@@ -17,9 +17,9 @@ import { Skeleton } from "../ui/skeleton";
 
 export default function Sidebar() {
   const session = useSession();
-  const ROLE = session.data?.user.role.toLowerCase() === "agent";
+  const ROLE = session.data?.user.role;
 
-  if (ROLE) {
+  if (ROLE?.toLowerCase() === "agent") {
     if (session.status === "loading") {
       return (
         <div className="no-scrollbar fixed z-10 hidden h-full w-52 justify-between overflow-y-scroll bg-secondary px-5 md:flex">
@@ -36,7 +36,7 @@ export default function Sidebar() {
   return (
     <div
       className={`no-scrollbar fixed z-10 hidden h-full w-52 justify-between overflow-y-scroll bg-secondary px-5 md:flex ${
-        ROLE ? "md:flex" : "md:hidden"
+        ROLE?.toLowerCase() ? "md:flex" : "md:hidden"
       } `}
     >
       <div className="flex h-full w-full flex-col gap-3 pt-20">

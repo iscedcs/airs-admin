@@ -21,7 +21,7 @@ export default async function RootLayout({
       <div className="">
         <Sidebar />
         <div
-          className={`pt-[60px] md:ml-[208px] ${
+          className={`pt-[60px] ${
             session ? "md:ml-[208px]" : "md:ml-0"
           } `}
         >
