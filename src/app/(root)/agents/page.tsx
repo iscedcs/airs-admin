@@ -1,3 +1,4 @@
+import { allUsers } from "@/actions/users";
 import { PaginationISCE } from "@/components/shared/pagination-isce";
 import { Button } from "@/components/ui/button";
 import { agentsColumns } from "@/components/ui/table/columns";
@@ -19,7 +20,9 @@ export default async function Agents({
     limit,
     blacklisted: false,
   });
-  console.log({ agents });
+
+  const airs_agents = await allUsers({ role: "AIRS_AGENT" });
+  console.log({ airs_agents });
 
   const start = (Number(page) - 1) * Number(limit);
   const end = start + Number(limit);
@@ -47,7 +50,7 @@ export default async function Agents({
         <Tabs defaultValue="all" className="w-full">
           <TabsList>
             <TabsTrigger className="" value="all">
-              All Agents
+              All AIRS Agents
             </TabsTrigger>
           </TabsList>
           <TabsContent value="all">
@@ -57,7 +60,7 @@ export default async function Agents({
               searchWithPlaceholder="Search with name"
               showColumns
               columns={agentsColumns}
-              data={agents?.rows ?? []}
+              data={airs_agents.success?.data ?? []}
             />
             {agents && agents.rows && (
               <PaginationISCE

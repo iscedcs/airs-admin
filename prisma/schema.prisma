@@ -293,6 +293,8 @@ enum drivers_status_enum {
 enum users_role_enum {
   SUPERADMIN
   ADMIN
+  AIRS_ADMIN
+  AIRS_AGENT
   AGENT
   GREEN_ENGINE
   COMPLIANCE
@@ -332,63 +334,6 @@ enum vehicles_status_enum {
   ACTIVE
   CLEARED
   OWING
-}
-
-enum AUTH_ROLES {
-  SUPERADMIN
-  ADMIN
-  AGENT
-  GREEN_ENGINE
-  USER
-}
-
-enum DriverStatus {
-  ACTIVE
-  INACTIVE
-}
-
-enum PaymentGatewayEvents {
-  PAYMENT_INCOMING
-  PAYMENT_ERROR
-  PAYOUT_OUTGOING
-  SIMULATE_IN
-  SIMULATE_OUT
-}
-
-enum PaymentGateways {
-  FLUTTERWAVE
-  STANBIC
-}
-
-enum TransactionCategories {
-  KEKE
-  SMALL_SHUTTLE
-  BIG_SHUTTLE
-}
-
-enum TransactionTypes {
-  REVENUE
-  FINE
-}
-
-enum VehicleFineStatus {
-  PENDING
-  CANCELLED
-  PAID
-}
-
-enum VehicleStatus {
-  inActive
-  active
-  cleared
-  owing
-}
-
-enum WaiverStatus {
-  APPROVED
-  REJECTED
-  PENDING
-  CANCELLED
 }
 
 enum vehicle_transactions_paymenttype_enum {

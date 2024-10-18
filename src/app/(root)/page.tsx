@@ -24,7 +24,7 @@ export default async function DashboardAdmin() {
     redirect("/sign-in");
   }
   const userId = session.user.id;
-  const allAgents = await allUsers({ role: "AGENT" });
+  const allAgents = await allUsers({ role: "AIRS_AGENT" });
   const allVehicles = await allVehiclesCount();
   const myAgents = await getAgentRegisteredByAdminId({ userId });
   const newUsers =
@@ -51,7 +51,9 @@ export default async function DashboardAdmin() {
               <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
                 <p className="font-bold leading-none">Total</p>
                 <p className="text-2xl text-muted-foreground">
-                  {allAgents.success?.totalUsers}
+                  {allAgents.success?.totalUsers == null
+                    ? "0"
+                    : allAgents.success?.totalUsers}
                 </p>
               </div>
             </CardContent>
@@ -67,7 +69,9 @@ export default async function DashboardAdmin() {
               <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
                 <p className="font-bold leading-none">Total</p>
                 <p className="text-2xl text-muted-foreground">
-                  {myAgents.success?.totalAgents}
+                  {myAgents.success?.totalAgents == null
+                    ? "0"
+                    : myAgents.success?.totalAgents}
                 </p>
               </div>
             </CardContent>
@@ -83,7 +87,9 @@ export default async function DashboardAdmin() {
               <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
                 <p className="font-bold leading-none">Total</p>
                 <p className="text-2xl text-muted-foreground">
-                  {allVehicles.success?.data}
+                  {allVehicles.success?.data === null
+                    ? "0"
+                    : allVehicles.success?.data}
                 </p>
               </div>
             </CardContent>
