@@ -137,6 +137,24 @@ export const allVehiclesCount = async () => {
           return { error: "Something went wrong!!!" };
      }
 };
+export const allVehiclesWithStickerCount = async () => {
+     try {
+          const vehiclesCount = await db.vehicles.count({where: {
+               NOT: {
+                    barcode: ""
+               }
+          }});
+
+          return {
+               success: {
+                    message: "OKAY",
+                    data: vehiclesCount,
+               },
+          };
+     } catch {
+          return { error: "Something went wrong!!!" };
+     }
+};
 
 export const allVehiclesRegisteredByAgentId = async (userId: string) => {
      try {

@@ -1,6 +1,6 @@
 import { getAgentRegisteredByAdminId } from "@/actions/audit-trails";
 import { allUsers } from "@/actions/users";
-import { allVehiclesCount } from "@/actions/vehicles";
+import { allVehiclesCount, allVehiclesWithStickerCount } from "@/actions/vehicles";
 import { options } from "@/app/api/auth/options";
 import FormError from "@/components/shared/FormError";
 import {
@@ -26,6 +26,7 @@ export default async function DashboardAdmin() {
   const userId = session.user.id;
   const allAgents = await allUsers({ role: "AIRS_AGENT" });
   const allVehicles = await allVehiclesCount();
+  const vehicleWithSticker = await allVehiclesWithStickerCount();
   const myAgents = await getAgentRegisteredByAdminId({ userId });
   const newUsers =
     myAgents &&
@@ -63,7 +64,9 @@ export default async function DashboardAdmin() {
           <Card>
             <CardHeader>
               <CardTitle>Registered AIRS Agents</CardTitle>
-              <CardDescription>All AIRS Agents registered by you</CardDescription>
+              <CardDescription>
+                All AIRS Agents registered by you
+              </CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 px-2 py-4">
               <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
@@ -95,6 +98,24 @@ export default async function DashboardAdmin() {
             </CardContent>
           </Card>
         </Link>
+        {/* <Link href={"/vehicles"}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Verified Vehicles</CardTitle>
+              <CardDescription>Summary of verified vehicle</CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 px-2 py-4">
+              <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
+                <p className="font-bold leading-none">Total</p>
+                <p className="text-2xl text-muted-foreground">
+                  {vehicleWithSticker.success?.data === null
+                    ? "0"
+                    : vehicleWithSticker.success?.data}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link> */}
       </div>
       <div className="mb-20 flex flex-col gap-2">
         <DataTable
