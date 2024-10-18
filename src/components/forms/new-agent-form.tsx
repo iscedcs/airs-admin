@@ -166,10 +166,10 @@ type AgentFormValues = z.infer<typeof agentFormSchema>;
 
 // This can come from your database or API.
 const defaultValues: Partial<AgentFormValues> = {
-     role: "AGENT",
-     state: "Anambra",
-     country: "Nigeria",
-     id_type: "NIN",
+  role: "AIRS_AGENT",
+  state: "Anambra",
+  country: "Nigeria",
+  id_type: "NIN",
 };
 export function AgentForm() {
      const [isLoading, setIsLoading] = React.useState<boolean>(false);
