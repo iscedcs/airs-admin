@@ -44,8 +44,8 @@ export default async function DashboardAdmin() {
         <Link href={"/agents"}>
           <Card>
             <CardHeader>
-              <CardTitle>Agents</CardTitle>
-              <CardDescription>All Agents</CardDescription>
+              <CardTitle>AIRS Agents</CardTitle>
+              <CardDescription>All AIRS Agents</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 px-2 py-4">
               <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
@@ -62,8 +62,8 @@ export default async function DashboardAdmin() {
         <Link href={"/my-agents?page=1&limit=15"}>
           <Card>
             <CardHeader>
-              <CardTitle>Registered Agents</CardTitle>
-              <CardDescription>All Agents registered by you</CardDescription>
+              <CardTitle>Registered AIRS Agents</CardTitle>
+              <CardDescription>All AIRS Agents registered by you</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 px-2 py-4">
               <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
