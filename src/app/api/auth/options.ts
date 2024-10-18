@@ -39,7 +39,7 @@ export const options: NextAuthOptions = {
                               return null;
                          } else {
                               const user: User = result?.data;
-                              if (user.role === "ADMIN") {
+                              if (user.role === "AIRS_ADMIN") {
                                 return user;
                               } else {
                                 return null;
