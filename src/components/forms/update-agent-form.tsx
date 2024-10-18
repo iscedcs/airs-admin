@@ -177,258 +177,221 @@ export function UpdateAgentForm({ agent }: { agent: IUserExtended }) {
      }
 
      return (
-          <>
-               <Form {...form}>
-                    <form
-                         onSubmit={form.handleSubmit(onSubmit)}
-                         className="mb-20 flex flex-col gap-5"
-                    >
-                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                              <FormField
-                                   name="name"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>Name</FormLabel>
-                                             <FormControl>
-                                                  <Input
-                                                       disabled={disabled}
-                                                       placeholder="Full Name"
-                                                       {...field}
-                                                  />
-                                             </FormControl>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="phone"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>Phone Number</FormLabel>
-                                             <FormControl>
-                                                  <Input
-                                                       disabled={disabled}
-                                                       placeholder="Enter phone number"
-                                                       {...field}
-                                                  />
-                                             </FormControl>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="email"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>
-                                                  Email Address
-                                             </FormLabel>
-                                             <FormControl>
-                                                  <Input
-                                                       disabled
-                                                       placeholder="Email"
-                                                       {...field}
-                                                  />
-                                             </FormControl>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="role"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>Agent Role</FormLabel>
-                                             <Select
-                                                  disabled
-                                                  onValueChange={field.onChange}
-                                                  defaultValue={field.value}
-                                             >
-                                                  <FormControl>
-                                                       <SelectTrigger className="h-12">
-                                                            <SelectValue placeholder="Select a mean of Identification" />
-                                                       </SelectTrigger>
-                                                  </FormControl>
-                                                  <SelectContent>
-                                                       <SelectItem value="AGENT">
-                                                            AGENT
-                                                       </SelectItem>
-                                                       <SelectItem value="GREEN_ENGINE">
-                                                            GREEN ENGINE
-                                                       </SelectItem>
-                                                  </SelectContent>
-                                             </Select>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="id_type"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>
-                                                  Means of Identification
-                                             </FormLabel>
-                                             <Select
-                                                  onValueChange={field.onChange}
-                                                  defaultValue={field.value}
-                                                  disabled={disabled}
-                                             >
-                                                  <FormControl>
-                                                       <SelectTrigger className="h-12">
-                                                            <SelectValue placeholder="Select a mean of Identification" />
-                                                       </SelectTrigger>
-                                                  </FormControl>
-                                                  <SelectContent>
-                                                       <SelectItem value="NIN">
-                                                            NIN
-                                                       </SelectItem>
-                                                       <SelectItem value="BVN">
-                                                            BVN
-                                                       </SelectItem>
-                                                       <SelectItem value="PVC">
-                                                            Voters Card
-                                                       </SelectItem>
-                                                  </SelectContent>
-                                             </Select>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="id_number"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>
-                                                  Identification Number
-                                             </FormLabel>
-                                             <FormControl>
-                                                  <Input
-                                                       disabled={disabled}
-                                                       placeholder="Enter identification number"
-                                                       {...field}
-                                                  />
-                                             </FormControl>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="address"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>Address</FormLabel>
-                                             <FormControl>
-                                                  <Input
-                                                       disabled={disabled}
-                                                       placeholder="Street"
-                                                       {...field}
-                                                  />
-                                             </FormControl>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="unit"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>Unit</FormLabel>
-                                             <FormControl>
-                                                  <Input
-                                                       disabled={disabled}
-                                                       placeholder="Unit"
-                                                       {...field}
-                                                  />
-                                             </FormControl>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="city"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>City</FormLabel>
-                                             <FormControl>
-                                                  <Input
-                                                       disabled={disabled}
-                                                       placeholder="City"
-                                                       {...field}
-                                                  />
-                                             </FormControl>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="postal_code"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>Postal Code</FormLabel>
-                                             <FormControl>
-                                                  <Input
-                                                       disabled={disabled}
-                                                       placeholder="Postal Code"
-                                                       {...field}
-                                                  />
-                                             </FormControl>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                              <FormField
-                                   name="lga"
-                                   control={form.control}
-                                   render={({ field }) => (
-                                        <FormItem>
-                                             <FormLabel>LGA</FormLabel>
-                                             <FormControl>
-                                                  <Input
-                                                       disabled={disabled}
-                                                       placeholder="LGA"
-                                                       {...field}
-                                                  />
-                                             </FormControl>
-                                             <FormMessage />
-                                        </FormItem>
-                                   )}
-                              />
-                         </div>
-                         <FormField
-                              name="blacklisted"
-                              control={form.control}
-                              render={({ field }) => (
-                                   <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                        <FormControl>
-                                             <Checkbox
-                                                  disabled={disabled}
-                                                  checked={field.value}
-                                                  onCheckedChange={
-                                                       field.onChange
-                                                  }
-                                             />
-                                        </FormControl>
-                                        <div className="space-y-1 leading-none">
-                                             <FormLabel>
-                                                  Blacklist Agent
-                                             </FormLabel>
-                                        </div>
-                                   </FormItem>
-                              )}
-                         />
-                    </form>
-               </Form>
-          </>
+       <>
+         <Form {...form}>
+           <form
+             onSubmit={form.handleSubmit(onSubmit)}
+             className="mb-20 flex flex-col gap-5"
+           >
+             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+               <FormField
+                 name="name"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Name</FormLabel>
+                     <FormControl>
+                       <Input
+                         disabled={disabled}
+                         placeholder="Full Name"
+                         {...field}
+                       />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="phone"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Phone Number</FormLabel>
+                     <FormControl>
+                       <Input
+                         disabled={disabled}
+                         placeholder="Enter phone number"
+                         {...field}
+                       />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="email"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Email Address</FormLabel>
+                     <FormControl>
+                       <Input disabled placeholder="Email" {...field} />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="role"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Agent Role</FormLabel>
+                     <Input disabled value={"AIRS_AGENT"} />
+
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="id_type"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Means of Identification</FormLabel>
+                     <Select
+                       onValueChange={field.onChange}
+                       defaultValue={field.value}
+                       disabled={disabled}
+                     >
+                       <FormControl>
+                         <SelectTrigger className="h-12">
+                           <SelectValue placeholder="Select a mean of Identification" />
+                         </SelectTrigger>
+                       </FormControl>
+                       <SelectContent>
+                         <SelectItem value="NIN">NIN</SelectItem>
+                         <SelectItem value="BVN">BVN</SelectItem>
+                         <SelectItem value="PVC">Voters Card</SelectItem>
+                       </SelectContent>
+                     </Select>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="id_number"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Identification Number</FormLabel>
+                     <FormControl>
+                       <Input
+                         disabled={disabled}
+                         placeholder="Enter identification number"
+                         {...field}
+                       />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="address"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Address</FormLabel>
+                     <FormControl>
+                       <Input
+                         disabled={disabled}
+                         placeholder="Street"
+                         {...field}
+                       />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="unit"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Unit</FormLabel>
+                     <FormControl>
+                       <Input
+                         disabled={disabled}
+                         placeholder="Unit"
+                         {...field}
+                       />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="city"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>City</FormLabel>
+                     <FormControl>
+                       <Input
+                         disabled={disabled}
+                         placeholder="City"
+                         {...field}
+                       />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="postal_code"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>Postal Code</FormLabel>
+                     <FormControl>
+                       <Input
+                         disabled={disabled}
+                         placeholder="Postal Code"
+                         {...field}
+                       />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+               <FormField
+                 name="lga"
+                 control={form.control}
+                 render={({ field }) => (
+                   <FormItem>
+                     <FormLabel>LGA</FormLabel>
+                     <FormControl>
+                       <Input
+                         disabled={disabled}
+                         placeholder="LGA"
+                         {...field}
+                       />
+                     </FormControl>
+                     <FormMessage />
+                   </FormItem>
+                 )}
+               />
+             </div>
+             <FormField
+               name="blacklisted"
+               control={form.control}
+               render={({ field }) => (
+                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                   <FormControl>
+                     <Checkbox
+                       disabled={disabled}
+                       checked={field.value}
+                       onCheckedChange={field.onChange}
+                     />
+                   </FormControl>
+                   <div className="space-y-1 leading-none">
+                     <FormLabel>Blacklist Agent</FormLabel>
+                   </div>
+                 </FormItem>
+               )}
+             />
+           </form>
+         </Form>
+       </>
      );
 }
