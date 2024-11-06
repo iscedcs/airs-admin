@@ -14,9 +14,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import {
      MANAGE_SIDEBAR_LINKS,
-     SIDEBAR_LINKS,
      SIDEBAR_LINKS_ADMIN,
-     SIDEBAR_LINKS_AGENT,
 } from "@/lib/consts";
 import { getInitials } from "@/lib/utils";
 import { usePathname } from "next/navigation";

@@ -313,6 +313,8 @@ enum vehicle_transactions_transaction_category_enum {
   SHUTTLE_BUS
   BUS_INTRASTATE
   TRUCKS
+  TAXIS
+  MASS_TRANSIT
   BUS_INTERSTATE
   OTHERS
 }
@@ -320,6 +322,7 @@ enum vehicle_transactions_transaction_category_enum {
 enum vehicle_transactions_transaction_type_enum {
   REVENUE
   FINE
+  ISCE
 }
 
 enum vehicle_waivers_status_enum {
@@ -340,4 +343,5 @@ enum vehicle_transactions_paymenttype_enum {
   CVOF
   FAREFLEX
   ISCE
+  STICKER
 }

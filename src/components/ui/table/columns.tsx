@@ -32,6 +32,8 @@ import { UpdateBitsForm } from "@/components/forms/update-bits-form";
 import { UpdateSettingsForm } from "@/components/forms/update-settings-form";
 import DeleteWaiverButton from "@/components/shared/delete-buttons/delete-waiver-button";
 import UpdateWaiverButton from "@/components/role/rider/update-waiver-button";
+import { vehicle_wallets } from "@prisma/client";
+import { IOwingVehicles } from "@/lib/types";
 
 export const debtColumns: ColumnDef<IVehiclePayment>[] = [
   {
@@ -366,6 +368,87 @@ export const vehiclesColumns: ColumnDef<IVehicle>[] = [
     },
   },
 ];
+
+export const owingvehiclesColumns: ColumnDef<IOwingVehicles>[] = [
+  {
+    accessorKey: "vehicles",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Owner" />
+    ),
+    cell: ({ row }) => {
+      return (
+        //@ts-expect-error
+        <div className="uppercase">{row.original.vehicles?.owner?.name}</div>
+      );
+    },
+  },
+  {
+    accessorKey: "plate_number",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Plate Number" />
+    ),
+    cell: ({ row }) => (
+      <div className="uppercase">{row.original.vehicles.plate_number}</div>
+    ),
+  },
+  {
+    accessorKey: "t_code",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="T-Code" />
+    ),
+    cell: ({ row }) => (
+      <div className="uppercase">{row.original.vehicles.t_code}</div>
+    ),
+  },
+  {
+    accessorKey: "category",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
+    cell: ({ row }) => (
+      <div className="uppercase">{row.original.vehicles.category}</div>
+    ),
+  },
+  {
+    accessorKey: "cvof_owing",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Overdue Balance (₦)" />
+    ),
+    cell: ({ row }) => (
+      <div className="uppercase">
+        {Math.round(Number(row.original.cvof_owing))}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "days_owing",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Days Overdue" />
+    ),
+    cell: ({ row }) => {
+      let categoryValue;
+      switch (row.original.vehicles.category) {
+        case "TRICYCLE":
+          categoryValue = Number(row.original.cvof_owing) / 2000;
+          break;
+        case "SHUTTLE_BUS":
+          categoryValue = Number(row.original.cvof_owing) / 2400;
+          break;
+        case "TRUCKS":
+          categoryValue = Number(row.original.cvof_owing) / 3000;
+          break;
+        case "BUS_INTERSTATE":
+          categoryValue = Number(row.original.cvof_owing) / 4000;
+          break;
+        default:
+          categoryValue = Number(row.original.cvof_owing) / 500;
+          break;
+      }
+      return <div className="">{Math.round(categoryValue)} Days</div>;
+    },
+  },
+];
+
 export const propertiesColumns: ColumnDef<IProperty>[] = [
   {
     accessorKey: "propertyId",

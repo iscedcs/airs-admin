@@ -198,30 +198,56 @@ export const allVehiclesRegisteredByAgentId = async (userId: string) => {
      }
 };
 
+export const getOwingVehicles = async (page: number, limit: number) => {
+  const owingVehicles = await db.vehicle_wallets.findMany({
+    take: limit,
+    skip: (page - 1) * limit,
+    include: {
+      vehicles: true,
+    },
+    orderBy: {
+      cvof_owing: "desc",
+    },
+    where: {
+      cvof_owing: {
+        gt: 667,
+      },
+    },
+  });
+  const countOwingVehicles = await db.vehicle_wallets.findMany({
+    where: {
+      cvof_owing: {
+        gt: 667,
+      },
+    },
+  });
+  return {owingVehicles, countOwingVehicles };
+};
+
 export const getVehicleBySticker = async (barcode: string) => {
-     try {
-          const vehicle = await db.vehicles.findFirst({
-               where: {
-                    barcode,
-               },
-          });
-          if (vehicle) {
-               return {
-                    success: {
-                         message: "OKAY",
-                         data: {
-                              vehicle,
-                         }, // Return the count of unique plate numbers
-                    },
-               };
-          } else {
-               return undefined;
-          }
-     } catch (error) {
-          return {
-               error: `Could not fetch vehicle with barcode ${barcode}`,
-          };
-     }
+  try {
+    const vehicle = await db.vehicles.findFirst({
+      where: {
+        barcode,
+      },
+    });
+    if (vehicle) {
+      return {
+        success: {
+          message: "OKAY",
+          data: {
+            vehicle,
+          }, // Return the count of unique plate numbers
+        },
+      };
+    } else {
+      return undefined;
+    }
+  } catch (error) {
+    return {
+      error: `Could not fetch vehicle with barcode ${barcode}`,
+    };
+  }
 };
 export const getVehicleCategoriesData = async (
      categories: vehicle_transactions_transaction_category_enum[],

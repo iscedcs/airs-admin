@@ -1,9 +1,14 @@
+import { getOwingVehicles } from "@/actions/vehicles";
 import { options } from "@/app/api/auth/options";
 import { PaginationISCE } from "@/components/shared/pagination-isce";
 import AgentSearchBar from "@/components/ui/agent-search-bar";
 import { buttonVariants } from "@/components/ui/button";
-import { vehiclesColumns } from "@/components/ui/table/columns";
+import {
+  owingvehiclesColumns,
+  vehiclesColumns,
+} from "@/components/ui/table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getVehicles } from "@/lib/controller/vehicle-controller";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
@@ -12,61 +17,95 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Vehicles({
-     searchParams,
+  searchParams,
 }: {
-     searchParams: { [key: string]: string | undefined };
+  searchParams: { [key: string]: string | undefined };
 }) {
-     const session = await getServerSession(options);
-     if (!session) return redirect("/sign-in");
+  const session = await getServerSession(options);
+  if (!session) return redirect("/sign-in");
 
-     const page = searchParams["page"] ?? "1";
-     const limit = searchParams["limit"] ?? "15";
+  const page = Number(searchParams["page"] ?? "1");
+  const limit = Number(searchParams["limit"] ?? "15");
 
-     const vehicles = await getVehicles(page, limit);
-     const start = (Number(page) - 1) * Number(limit);
-     const end = start + Number(limit);
-     return (
-          <>
-               <div className="flex items-center justify-between font-bold uppercase">
-                    <div className="shrink-0 grow-0">VEHICLES</div>
-               </div>
-               <div className="inline-flex h-10 w-full items-end justify-start border-b border-primary bg-background text-muted-foreground">
-                    <div className="inline-flex items-center justify-center whitespace-nowrap border-primary px-3 py-1.5 text-sm font-bold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-2 data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-                         All Vehicles
-                    </div>
-               </div>
-               {session.user.role?.toLowerCase() !== "agent" &&
-               session.user.role?.toLowerCase() !== "green_engine" ? (
-                    <>
-                         <div className="mb-10 flex flex-col gap-5">
-                              <DataTable
-                                   showSearch
-                                   searchWith="plate_number"
-                                   searchWithPlaceholder="Search with plate number"
-                                   showColumns
-                                   columns={vehiclesColumns}
-                                   data={vehicles?.rows ?? []}
-                              />
-                         </div>
-                         {vehicles && (
-                              <PaginationISCE
-                                   hasNextPage={end < vehicles.meta.total}
-                                   hasPrevPage={start > 0}
-                                   page={Number(page)}
-                                   limit={Number(limit)}
-                                   total={vehicles.meta.total}
-                                   hrefPrefix="/vehicles"
-                              />
-                         )}
-                    </>
-               ) : (
-                    <div className="mx-auto mt-10 grid h-full w-full max-w-[500px] place-items-center">
-                         <AgentSearchBar
-                              placeholder="Enter T-Code"
-                              variant="primary"
-                         />
-                    </div>
-               )}
-          </>
-     );
+  const owingVehicles = await getOwingVehicles(page, limit);
+
+  const vehicles = await getVehicles(page.toString(), limit.toString());
+
+  const start = (Number(page) - 1) * Number(limit);
+  const end = start + Number(limit);
+
+  return (
+    <>
+      <div className="flex items-center justify-between font-bold uppercase">
+        <div className="shrink-0 grow-0">VEHICLES</div>
+      </div>
+      <Tabs defaultValue="all" className="mt-[20px]">
+        <TabsList>
+          <TabsTrigger value="all">All Vehicles</TabsTrigger>
+          <TabsTrigger value="owing">Owing Vehicles</TabsTrigger>
+        </TabsList>
+        <TabsContent value="all">
+          {session.user.role?.toLowerCase() !== "agent" &&
+          session.user.role?.toLowerCase() !== "green_engine" ? (
+            <>
+              <div className="mb-10 flex flex-col gap-5">
+                <DataTable
+                  showSearch
+                  searchWith="plate_number"
+                  searchWithPlaceholder="Search with plate number"
+                  showColumns
+                  columns={vehiclesColumns}
+                  data={vehicles?.rows ?? []}
+                />
+              </div>
+              {vehicles && (
+                <PaginationISCE
+                  hasNextPage={end < vehicles.meta.total}
+                  hasPrevPage={start > 0}
+                  page={Number(page)}
+                  limit={Number(limit)}
+                  total={vehicles.meta.total}
+                  hrefPrefix="/vehicles"
+                />
+              )}
+            </>
+          ) : (
+            <div className="mx-auto mt-10 grid h-full w-full max-w-[500px] place-items-center">
+              <AgentSearchBar placeholder="Enter T-Code" variant="primary" />
+            </div>
+          )}
+        </TabsContent>
+        <TabsContent value="owing">
+          {session.user.role?.toLowerCase() !== "agent" &&
+          session.user.role?.toLowerCase() !== "green_engine" ? (
+            <>
+              {" "}
+              <DataTable
+                showSearch
+                searchWith="vehicles.plate_number"
+                searchWithPlaceholder="Search with plate number"
+                showColumns
+                columns={owingvehiclesColumns}
+                data={owingVehicles.owingVehicles}
+              />
+              {owingVehicles && (
+                <PaginationISCE
+                  hasNextPage={end < owingVehicles.countOwingVehicles.length}
+                  hasPrevPage={start > 0}
+                  page={Number(page)}
+                  limit={Number(limit)}
+                  total={owingVehicles.countOwingVehicles.length}
+                  hrefPrefix="/vehicles"
+                />
+              )}
+            </>
+          ) : (
+            <div className="mx-auto mt-10 grid h-full w-full max-w-[500px] place-items-center">
+              <AgentSearchBar placeholder="Enter T-Code" variant="primary" />
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </>
+  );
 }

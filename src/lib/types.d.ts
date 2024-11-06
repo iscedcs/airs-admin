@@ -1,3 +1,5 @@
+import { vehicle_wallets, vehicles } from "@prisma/client";
+
 type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
@@ -757,4 +759,8 @@ interface IUserExtended {
     postal_code: string;
   };
   identification: { type: string; number: string };
+}
+
+interface IOwingVehicles extends vehicle_wallets {
+  vehicles: vehicles;
 }
