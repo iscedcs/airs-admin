@@ -22,6 +22,7 @@ export default async function Agents({
   });
 
   const airs_agents = await allUsers({ role: "AIRS_AGENT" });
+  
   console.log({ airs_agents });
 
   const start = (Number(page) - 1) * Number(limit);
