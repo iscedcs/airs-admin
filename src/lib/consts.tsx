@@ -2222,3 +2222,18 @@ export enum VehicleValues {
   BUS_INTERSTATE = 666,
   OTHERS = 333,
 }
+
+export const months = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december",
+];
