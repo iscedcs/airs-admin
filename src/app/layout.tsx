@@ -3,7 +3,6 @@ import { Toaster } from "@/components/ui/toaster";
 import NextAuthProvider from "@/lib/providers/nextauth-provider";
 import Provider from "@/lib/session-provider";
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import { Lato } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
@@ -45,7 +44,7 @@ export default function HomeLayout({
               </div>
             </ThemeProvider>
             <Analytics />
-            <SpeedInsights />
+            {/* <SpeedInsights /> */}
           </NextAuthProvider>
         </body>
       </Provider>

@@ -6,7 +6,6 @@ import {
   allVehiclesWithStickerCount,
 } from "@/actions/vehicles";
 import { options } from "@/app/api/auth/options";
-import FormError from "@/components/shared/FormError";
 import {
   Card,
   CardContent,
@@ -28,7 +27,7 @@ import { Suspense } from "react";
 export default async function DashboardAdmin() {
   const session = await getServerSession(options);
   const user = await getUser(session?.user.id!);
-  if (!session || !session.user || !session.user.id) {
+  if (!session || !session.user || !user) {
     redirect("/sign-in");
   }
   const userId = session.user.id;

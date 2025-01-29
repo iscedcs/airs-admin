@@ -48,7 +48,7 @@ export function DateSelector({ frequency }: DateSelectorProps) {
     const w = `week${Math.ceil(date.getDate() / 7)}`
     const d = date.getDate()
     
-    let url = `/dashboard/history/${frequency}`
+    let url = `/history/${frequency}`;
     if (frequency !== 'all') url += `?y=${y}`
     if (['monthly', 'weekly', 'daily'].includes(frequency)) url += `&m=${m}`
     if (['weekly', 'daily'].includes(frequency)) url += `&w=${w}`
