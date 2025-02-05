@@ -1,4 +1,4 @@
-import { getOwingVehicles } from "@/actions/vehicles";
+import { getOwingVehicles, getVehicles } from "@/actions/vehicles";
 import { options } from "@/app/api/auth/options";
 import { PaginationISCE } from "@/components/shared/pagination-isce";
 import AgentSearchBar from "@/components/ui/agent-search-bar";
@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { getVehicles } from "@/lib/controller/vehicle-controller";
+// import { getVehicles } from "@/lib/controller/vehicle-controller";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import { getServerSession } from "next-auth";
@@ -29,7 +29,7 @@ export default async function Vehicles({
 
   const owingVehicles = await getOwingVehicles(page, limit);
 
-  const vehicles = await getVehicles(page.toString(), limit.toString());
+  const vehicles = await getVehicles(page, limit);
 
   const start = (Number(page) - 1) * Number(limit);
   const end = start + Number(limit);
@@ -55,16 +55,16 @@ export default async function Vehicles({
                   searchWithPlaceholder="Search with plate number"
                   showColumns
                   columns={vehiclesColumns}
-                  data={vehicles?.rows ?? []}
+                  data={vehicles?.vehicles ?? []}
                 />
               </div>
               {vehicles && (
                 <PaginationISCE
-                  hasNextPage={end < vehicles.meta.total}
+                  hasNextPage={end < vehicles.pagination.totalCount}
                   hasPrevPage={start > 0}
                   page={Number(page)}
                   limit={Number(limit)}
-                  total={vehicles.meta.total}
+                  total={vehicles.pagination.totalCount}
                   hrefPrefix="/vehicles"
                 />
               )}
