@@ -763,4 +763,5 @@ interface IUserExtended {
 
 interface IOwingVehicles extends vehicle_wallets {
   vehicles: vehicles;
+  
 }
