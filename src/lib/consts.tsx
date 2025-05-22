@@ -1698,7 +1698,7 @@ export const LGA = [
   "Oyi",
 ];
 // export const API = 'https://squid-app-ruxoz.ondigitalocean.app';
-// export const API = 'http://localhost:5000';
+// export const API = 'http://localhost:7000';
 // export const API = 'https://guided-adequately-hare.ngrok-free.app'; // Abdullah PC
 // export const API =
 // 	process.env.TEST_BACKEND_URL ||
