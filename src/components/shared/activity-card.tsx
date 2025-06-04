@@ -1,3 +1,4 @@
+import { IActivityCard } from '@/lib/types';
 import { unslugify } from '@/lib/utils';
 import Link from 'next/link';
 import React from 'react';

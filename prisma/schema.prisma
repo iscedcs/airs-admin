@@ -162,10 +162,10 @@ model vehicle_trackers {
   terminal_id String?
   info        Json?
   stats       Json?
-  url         String    @default("https://api.gwgps12580.com/v1/Ch_manage_controller/api")
-  fee         Decimal   @default(0) @db.Decimal
-  unpaid      Decimal   @default(0) @db.Decimal
-  total       Decimal   @default(0) @db.Decimal
+  url         String?   @default("https://api.gwgps12580.com/v1/Ch_manage_controller/api")
+  fee         Decimal?  @default(0) @db.Decimal
+  unpaid      Decimal?  @default(0) @db.Decimal
+  total       Decimal?  @default(0) @db.Decimal
   vehicles    vehicles? @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_52346daf731f20415a9b18e40d9")
 }
 
@@ -213,6 +213,7 @@ model vehicle_waivers {
   status          vehicle_waivers_status_enum @default(PENDING)
   vehicleId       String?                     @db.Uuid
   approvedById    String?                     @db.Uuid
+  duration        Int?
   users           users?                      @relation(fields: [approvedById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_79d924d5c983907910abe04147e")
   vehicles        vehicles?                   @relation(fields: [vehicleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a7d78c17f844aa0913431860766")
 }

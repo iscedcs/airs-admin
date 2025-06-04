@@ -273,13 +273,6 @@ export function transformTransactionsToWeeksData(
 // 	const totalByDay: { [day: string]: number } = {};
 
 // 	transactions.forEach((transaction: ITransaction) => {
-// 		console.log({
-// 			date: format(
-// 				new Date(transaction.created_at),
-// 				'yyyy-MM-dd'
-// 			),
-// 			amount: transaction.amount,
-// 		});
 // 		const transactionDate = new Date(transaction.created_at);
 // 		// Using the transaction date directly as the key
 // 		const dayKey = format(new Date(transactionDate), 'dd-mm');
@@ -333,7 +326,6 @@ export function transformTransactionsToWeeksData(
 // 		);
 // 		if (matchingDay) {
 // 			matchingDay.total += Number(t.amount);
-// 			// console.log(`Added ${t.amount} to ${matchingDay.name}`);
 // 		}
 // 	});
 
@@ -434,6 +426,32 @@ export function isURL(str: string): boolean {
   return urlRegex.test(str);
 }
 
+export type IdType = "uuid" | "plate_number" | "tcode" | "asin";
+
+export function identifyIdType(id: string): IdType {
+  // Check if it's a plate number (2-3 letters, 2-3 numbers, 2-3 letters)
+  const plateNumberRegex = /^[A-Z]{2,3}[ -]?[0-9]{2,3}[ -]?[A-Z]{2,3}$/i;
+  if (plateNumberRegex.test(id)) {
+    return "plate_number";
+  }
+
+  // Check if it's a TCode (starts with T, U, or V followed by numbers)
+  const tcodeRegex = /^[TUV]\d+$/;
+  if (tcodeRegex.test(id)) {
+    return "tcode";
+  }
+
+  // Check if it's an ASIN (all digits)
+  const asinRegex = /^\d+$/;
+  if (asinRegex.test(id)) {
+    return "asin";
+  }
+
+  // If none of the above, assume it's a UUID
+  // A more strict UUID check could be added if needed
+  return "uuid";
+}
+
 export const checkEnvironment = () => {
   let base_url =
     process.env.NODE_ENV === "development"
@@ -461,6 +479,29 @@ export function generateRandomLocation(): {
   );
 
   return { lat, lng };
+}
+
+export function generateRandomLocations(
+  count: number
+): { lat: number; lng: number }[] {
+  const minLat: number = 6.0233;
+  const maxLat: number = 6.2322;
+  const minLng: number = 7.0733;
+  const maxLng: number = 7.2822;
+
+  const locations: { lat: number; lng: number }[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const lat: number = parseFloat(
+      (Math.random() * (maxLat - minLat) + minLat).toFixed(6)
+    );
+    const lng: number = parseFloat(
+      (Math.random() * (maxLng - minLng) + minLng).toFixed(6)
+    );
+    locations.push({ lat, lng });
+  }
+
+  return locations;
 }
 
 export function generateRandomInteger(min: number, max: number): number {
@@ -683,7 +724,7 @@ export function getNextPaymentDate(
   // Get the fee amount for the vehicle category
   const dailyFee = VehicleValues[vehicleCategory];
 
-  console.log({ cvofBalance, cvofOwing, vehicleCategory, dailyFee });
+  // console.log({ cvofBalance, cvofOwing, vehicleCategory, dailyFee });
 
   if (cvofOwing > 0) {
     // Vehicle is owing, calculate how many days in the past
@@ -704,6 +745,68 @@ export function getNextPaymentDate(
       nextPaymentDate = addDays(nextPaymentDate, 1);
     }
   }
-
+  // console.log(nextPaymentDate, "PAYMENT DATE");
   return nextPaymentDate;
 }
+
+export const getRevenueType = (name: string) => {
+  const revenueTypes = [
+    { keyword: "CVOF", aliases: ["Commercial Vehicle Operational"] },
+    { keyword: "FAREFLEX", aliases: ["Fair Flex"] },
+    {
+      keyword: "DEVICE",
+      aliases: ["Device", "Device Maintenance", "Device Installation"],
+    },
+  ];
+
+  const upperName = name.toUpperCase();
+
+  for (const type of revenueTypes) {
+    if (type.aliases.some((alias) => upperName.includes(alias.toUpperCase()))) {
+      return type.keyword;
+    }
+  }
+
+  return "OTHERS";
+};
+
+export const cleanObject = (obj: any) => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([_, v]) => v !== "" && v !== null && v !== undefined
+    )
+  );
+};
+
+export const formatPhoneNumber = (value: string) => {
+  // Remove all non-digit characters except +
+  let cleaned = value.replace(/[^\d+]/g, "");
+
+  // If the input is empty, return empty
+  if (!cleaned) return "";
+
+  // If it starts with +234, keep it as is
+  if (cleaned.startsWith("+234")) {
+    return cleaned;
+  }
+
+  // If it starts with 234, add the +
+  if (cleaned.startsWith("234")) {
+    return "+" + cleaned;
+  }
+
+  // If it starts with +, remove it and add +234
+  if (cleaned.startsWith("+")) {
+    cleaned = cleaned.substring(1);
+    return "+234" + cleaned;
+  }
+
+  // If it starts with 0, remove the 0 and add +234
+  if (cleaned.startsWith("0")) {
+    cleaned = cleaned.substring(1);
+    return "+234" + cleaned;
+  }
+
+  // For any other input, prepend +234
+  return "+234" + cleaned;
+};

@@ -1,4 +1,5 @@
 import { Button, buttonVariants } from '@/components/ui/button';
+import { IActivityCard } from '@/lib/types';
 import { cn, unslugify } from '@/lib/utils';
 import Link from 'next/link';
 import React from 'react';
