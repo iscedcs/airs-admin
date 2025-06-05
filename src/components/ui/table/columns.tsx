@@ -18,6 +18,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import {
+  Eye,
   EyeIcon,
   MapPinIcon,
   MoreHorizontal,
@@ -33,7 +34,8 @@ import { UpdateSettingsForm } from "@/components/forms/update-settings-form";
 import DeleteWaiverButton from "@/components/shared/delete-buttons/delete-waiver-button";
 import UpdateWaiverButton from "@/components/role/rider/update-waiver-button";
 import { vehicle_wallets } from "@prisma/client";
-import { IOwingVehicles } from "@/lib/types";
+import { ICompany, IOwingVehicles } from "@/lib/types";
+import GetCompanyVehicle from "@/components/shared/get-company-info";
 
 export const debtColumns: ColumnDef<IVehiclePayment>[] = [
   {
@@ -998,6 +1000,182 @@ export const viewWaiverColumnsAdmin: ColumnDef<IWaiver>[] = [
             </DropdownMenuContent>
           </DropdownMenu>
         );
+    },
+  },
+];
+
+export const companiesColumn: ColumnDef<ICompany>[] = [
+  {
+    accessorKey: "name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Company Name" />
+    ),
+    cell: ({ row }) => (
+      <Link
+        href={` ${
+          row.original.deleted_at === null
+            ? `/companies/${row.original.id}`
+            : `/companies/${row.original.id}/deleted`
+        } `}
+        className=""
+      >
+        {row.original.name}
+      </Link>
+    ),
+  },
+  {
+    accessorKey: "asin",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Company ASIN Number" />
+    ),
+    cell: ({ row }) => <div className=" text-center">{row.original.asin}</div>,
+  },
+  {
+    accessorKey: "vehicles",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Number of Vehicles" />
+    ),
+    // accessorFn: (row) => row.vehicles.length,
+    cell: ({ row }) => (
+      <div className=" text-center">
+        <GetCompanyVehicle id={row.original.id} />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "directorCount",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Number of Directors" />
+    ),
+    // accessorFn: (row) => row.directors.length,
+    cell: ({ row }) => (
+      <div className=" text-center">{row.original.directorCount}</div>
+    ),
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const group = row.original;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <MoreVertical className="h-4 w-4" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="border border-black" align="end">
+            {group.deleted_at === null && (
+              <DropdownMenuItem
+                className="rounded-none border-b border-black"
+                asChild
+              >
+                <Link
+                  className="flex cursor-pointer gap-3 items-center"
+                  href={`/companies/${group.id}`}
+                >
+                  <Eye className="  h-4 w-4" />
+                  View Company
+                </Link>
+              </DropdownMenuItem>
+            )}
+
+            {/* <DropdownMenuItem>
+              {group.deleted_at === null ? (
+                <DeleteCompanyButton id={group.id} />
+              ) : (
+                <RestoreCompanyButton id={group.id} />
+              )}
+            </DropdownMenuItem> */}
+
+            {/* <DropdownMenuItem
+							className=''
+							onClick={() =>
+								navigator.clipboard.writeText(
+									vehicle.id
+								)
+							}
+						>
+							Copy vehicle ID
+						</DropdownMenuItem> */}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export const companyVehiclesColumn: ColumnDef<IVehicle>[] = [
+  {
+    accessorKey: "Drivers",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Owner" />
+    ),
+    cell: ({ row }) => (
+      <Link href={`/vehicles/${row.original.id}`} className="">
+        {row.original.owner.name}
+      </Link>
+    ),
+  },
+  {
+    accessorKey: "plate_number",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Plate Number" />
+    ),
+    cell: ({ row }) => (
+      <div className="uppercase">{row.original.plate_number}</div>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => <div className="uppercase">{row.original.status}</div>,
+  },
+  {
+    accessorKey: "category",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
+    cell: ({ row }) => <div className="uppercase">{row.original.category}</div>,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const vehicle = row.original;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <MoreVertical className="h-4 w-4" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="border border-black" align="end">
+            <DropdownMenuItem
+              className="rounded-none border-b border-black"
+              asChild
+            >
+              <Link href={`/vehicles/${vehicle.id}`}>
+                <span className="mr-3 h-4 w-4">{editIcon}</span>
+                View Vehicle
+              </Link>
+            </DropdownMenuItem>
+            {vehicle.tracker && vehicle.tracker.terminal_id && (
+              <DropdownMenuItem
+                className="rounded-none border-b border-black"
+                asChild
+              >
+                <Link href={`/vehicles/${vehicle.id}/location`}>
+                  <MapPinIcon className="mr-3 h-4 w-4" />
+                  View Location
+                </Link>
+              </DropdownMenuItem>
+            )}
+            {/* <DropdownMenuItem>
+              <RemoveVehicleFromCompany
+                className="  text-black hover:bg-white bg-white"
+                id={vehicle.id}
+              />
+            </DropdownMenuItem> */}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
   },
 ];

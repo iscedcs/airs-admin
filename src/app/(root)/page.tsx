@@ -1,5 +1,8 @@
 import { getAgentRegisteredByAdminId } from "@/actions/audit-trails";
-import { getPaymentTotals } from "@/actions/payment-notification";
+import {
+  getPaymentTotals,
+  getPaymentTotalsForStickers,
+} from "@/actions/payment-notification";
 import { allUsers } from "@/actions/users";
 import {
   allVehiclesCount,
@@ -18,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { agentsColumns } from "@/components/ui/table/columns";
 import { DataTable } from "@/components/ui/table/data-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUser } from "@/lib/controller/users.controller";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
@@ -40,13 +44,67 @@ export default async function DashboardAdmin() {
     myAgents.success?.data.map(
       (item) => (item.meta as { user: any; newUser: any })?.newUser
     );
-  const {
-    allTimeTotal,
-    yearToDateTotal,
-    monthToDateTotal,
-    weekToDateTotal,
-    dayToDateTotal,
-  } = await getPaymentTotals();
+
+  // const {
+  //   allTimeTotal,
+  //   yearToDateTotal,
+  //   monthToDateTotal,
+  //   weekToDateTotal,
+  //   dayToDateTotal,
+  // } = await getPaymentTotals();
+
+  const CVOF = await getPaymentTotals({ revenueType: "CVOF" });
+  const ISCE = await getPaymentTotalsForStickers({ revenueType: "ISCE" });
+  const FAREFLEX = await getPaymentTotals({ revenueType: "FAREFLEX" });
+
+  const redenderRevenueCards = (
+    data: any,
+    revenueType: "CVOF" | "ISCE" | "FAREFLEX"
+  ) => (
+    <div className="grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+      <Suspense
+        fallback={
+          <Skeleton className="flex h-24 w-full flex-col justify-between rounded-2xl bg-secondary p-3 shadow-md" />
+        }
+      >
+        <RevenueAmountCardNew
+          link={`/`}
+          type="TOTAL"
+          title="All Time Revenue"
+          desc="All time"
+          total={Number(data.allTimeTotal)}
+        />
+        <RevenueAmountCardNew
+          link={`/history/yearly?revenue=${revenueType}`}
+          type="YEAR"
+          title="Year Till Date Revenue"
+          desc="Year till date"
+          total={Number(data.yearToDateTotal)}
+        />
+        <RevenueAmountCardNew
+          link={`/history/monthly?revenue=${revenueType}`}
+          type="MONTH"
+          title="Month Till Date Revenue"
+          desc="Month till date"
+          total={Number(data.monthToDateTotal)}
+        />
+        <RevenueAmountCardNew
+          link={`/history/weekly?revenue=${revenueType}`}
+          type="WEEK"
+          title="Week Till Date Revenue"
+          desc="Week till date"
+          total={Number(data.weekToDateTotal)}
+        />
+        <RevenueAmountCardNew
+          link={`/history/daily?revenue=${revenueType}`}
+          type="DAY"
+          title="Day Till Date Revenue"
+          desc="Day till date"
+          total={Number(data.dayToDateTotal)}
+        />
+      </Suspense>
+    </div>
+  );
 
   return (
     <div className="p-5">
@@ -55,48 +113,27 @@ export default async function DashboardAdmin() {
           Welcome Back, {user?.name ?? "User"}
         </div>
       </div>
-      <div className="grid mt-[10px] grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-        <Suspense
-          fallback={
-            <Skeleton className="flex h-24 w-full flex-col justify-between rounded-2xl bg-secondary p-3 shadow-md" />
-          }
-        >
-          <RevenueAmountCardNew
-            link="/history/all"
-            type={"TOTAL"}
-            title={`All Time Revenue`}
-            desc={"All time"}
-            total={Number(allTimeTotal)}
-          />
-          <RevenueAmountCardNew
-            link="/history/yearly"
-            type={"YEAR"}
-            title="Year Till Date Revenue"
-            desc={"Year till date"}
-            total={Number(yearToDateTotal)}
-          />
-          <RevenueAmountCardNew
-            link="/history/monthly"
-            type={"MONTH"}
-            title={`Month Till Date Revenue`}
-            desc={"Month till date"}
-            total={Number(monthToDateTotal)}
-          />
-          <RevenueAmountCardNew
-            link="/history/weekly"
-            type={"WEEK"}
-            title={`Week Till Date Revenue`}
-            desc={"Week till date"}
-            total={Number(weekToDateTotal)}
-          />
-          <RevenueAmountCardNew
-            link="/history/daily"
-            type={"DAY"}
-            title={`Day Till Date Revenue`}
-            desc={"Day till date"}
-            total={Number(dayToDateTotal)}
-          />
-        </Suspense>
+      <div className=" w-full">
+        <Tabs defaultValue="cvof">
+          <TabsList className="mb-5">
+            <TabsTrigger value="cvof">CVOF</TabsTrigger>
+            <TabsTrigger value="isce">Sticker Payment</TabsTrigger>
+            <TabsTrigger value="fareflex">Fareflex Payment</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="cvof">
+            {redenderRevenueCards(CVOF, "CVOF")}
+          </TabsContent>
+
+          <TabsContent value="isce">
+            {redenderRevenueCards(ISCE, "ISCE")}
+          </TabsContent>
+
+          <TabsContent value="fareflex">
+            {redenderRevenueCards(FAREFLEX, "FAREFLEX")}
+          </TabsContent>
+        </Tabs>
+        <Separator className="my-5" />
       </div>
       <Separator className="my-5" />
       <div className="grid grid-cols-1 mt-[20px] gap-5 md:grid-cols-2 lg:grid-cols-3">

@@ -20,6 +20,7 @@ import {
   searchIcon,
   securityIcon,
 } from "./icons";
+import { $Enums, users_role_enum } from "@prisma/client";
 
 export const SIDEBAR_LINKS = [
   {
@@ -103,6 +104,16 @@ export const SIDEBAR_LINKS_ADMIN = [
     title: "Vehicles",
     href: "/vehicles",
     icon: driverIcon,
+  },
+  {
+    title: "Companies",
+    href: "/companies",
+    icon: driverIcon,
+  },
+  {
+    title: "Map",
+    href: "/map",
+    icon: <Map className="h-5 w-5" />,
   },
   // {
   // 	title: 'Fines & Penalties',
@@ -1733,7 +1744,6 @@ export const URLS = {
     signin: {
       admin: "/api/v1/users/login",
       agent: "/api/v1/users/login",
-      
     },
   },
   dashboard: {
@@ -1758,10 +1768,20 @@ export const URLS = {
   },
   vehicle: {
     all: "/api/v1/vehicles",
+    one: "/api/v1/vehicles/{id}",
+    plate: "/api/v1/vehicles/plate-number/{plateNumber}",
+    tcode: "/api/v1/vehicles/tcode/{tcode}",
+    withAsin: "/api/v1/vehicles/asin/{asin}",
+    barcode: "/api/v1/vehicles/barcode/{barcode}",
     blacklist: "/api/v1/vehicles/blacklist", // add vehicle to blacklist
     search: "/api/v1/vehicles/search", // add vehicle to blacklist
     asin: "/api/v1/vehicles/verify", // verify vehicle using ASIN
     fareflex: "/api/v1/vehicles/imei", // add fareflex to vehicle
+    sticker: "/api/v1/vehicles/sticker", // add fareflex to vehicle
+    newSticker: "/api/v1/vehicles/add-new/{id}/sticker", // add fareflex to vehicle
+    replaceSticker: "/api/v1/vehicles/replace/{id}/sticker", // add fareflex to vehicle
+    request: "/api/v1/sticker-requests/sticker-request", // sticker-request
+    payment: "/api/v1/vehicles/payment-history", // payment-history
   },
   settings: "/api/v1/settings", // for add ${id} for single.
   tracker: {
@@ -1775,6 +1795,23 @@ export const URLS = {
     "total-tracker": "/api/v1/transaction/total-tracker",
   },
   user: "/api/v1/users",
+  companies: {
+    create: "/api/v1/companies/create",
+    update: "/api/v1/companies/update",
+    all: "/api/v1/companies/all",
+    admin_fetch: "/api/v1/companies/fetch/all",
+    add_vehicle: "/api/v1/companies/assign-by-plate-numbers",
+    remove_vehicle: "/api/v1/companies/{vehicleId}/remove-from-company",
+    delete: "/api/v1/companies/delete",
+    restore: "/api/v1/companies/restore",
+    one: "/api/v1/companies/one/{id}",
+    vehicles: "/api/v1/companies/{companyId}/vehicles",
+    company_total: "/api/v1/audit-trails/companies/{userId}",
+    audit_trails: "/api/v1/audit-trails/company-created",
+  },
+  group: {
+    all: "/api/v1/groups",
+  },
 };
 
 export const TRACKER_BASE_URL =
@@ -2236,4 +2273,16 @@ export const months = [
   "october",
   "november",
   "december",
+];
+
+export const HAS_COMPANY_ACCESS = [
+  users_role_enum.SUPERADMIN,
+  users_role_enum.COMPANY_AGENT,
+  users_role_enum.ADMIN,
+  users_role_enum.AIRS_ADMIN,
+];
+
+export const ADMIN_ROLES: string[] = [
+  $Enums.users_role_enum.SUPERADMIN,
+  $Enums.users_role_enum.ADMIN,
 ];

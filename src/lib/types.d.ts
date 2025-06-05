@@ -763,5 +763,37 @@ interface IUserExtended {
 
 interface IOwingVehicles extends vehicle_wallets {
   vehicles: vehicles;
-  
 }
+
+interface ICompany {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: null;
+  name: string;
+  asin: string;
+  address: string;
+  phone: string;
+  category: "MASS_TRANSIT";
+  directors: {
+    id: string;
+    created_at: string;
+    updated_at: string;
+    deleted_at: null;
+    name: string;
+    phone: string;
+    email: string;
+    blacklisted: boolean;
+    address: string;
+    asin_number: string;
+  }[];
+  directorCount: number;
+  vehicles: IVehicle[];
+  owing: string;
+}
+
+interface IPaymnetHistory {
+  payment_date: string;
+  transaction_amount: string;
+}
+[];

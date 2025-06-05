@@ -203,7 +203,7 @@ export function UpdateVehicleForm({ vehicle }: { vehicle: IVehicle }) {
                               <div className="p-3">VEHICLE INFORMATION</div>
                          </div>
                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                              <FormField
+                              {/* <FormField
                                    name="category"
                                    control={form.control}
                                    render={({ field }) => (
@@ -254,7 +254,7 @@ export function UpdateVehicleForm({ vehicle }: { vehicle: IVehicle }) {
                                              <FormMessage />
                                         </FormItem>
                                    )}
-                              />
+                              /> */}
                               <FormField
                                    name="plate_number"
                                    control={form.control}
