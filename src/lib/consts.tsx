@@ -2,6 +2,8 @@ import CarouselSlides from "@/components/layout/carouselSlides";
 import {
   ActivitySquareIcon,
   CarTaxiFront,
+  Currency,
+  List,
   Map,
   SettingsIcon,
 } from "lucide-react";
@@ -96,6 +98,16 @@ export const SIDEBAR_LINKS_ADMIN = [
     icon: dashboardIcon,
   },
   {
+    title: "Transactions",
+    href: "/transactions",
+    icon: <List className="h-4 w-4" />,
+  },
+  {
+    title: "Revenue",
+    href: "/revenue",
+    icon: <Currency className="h-4 w-4" />,
+  },
+  {
     title: "Agents",
     href: "/agents",
     icon: agentsIcon,
@@ -115,11 +127,6 @@ export const SIDEBAR_LINKS_ADMIN = [
     href: "/map",
     icon: <Map className="h-5 w-5" />,
   },
-  // {
-  // 	title: 'Fines & Penalties',
-  // 	href: '/fines',
-  // 	icon: finesIcon,
-  // },
   {
     title: "Scan",
     href: "/scan",
@@ -1716,8 +1723,7 @@ export const LGA = [
 // 	'https://pig-crisp-logically.ngrok-free.app'; // Rex PC
 
 export const API =
-  process.env.LIVE_BACKEND_URL ||
-  "https://generally-equal-elephant.ngrok-free.app";
+  process.env.LIVE_BACKEND_URL;
 export const URLS = {
   activity: {
     all: "/api/v1/activities",

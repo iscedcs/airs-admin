@@ -843,3 +843,135 @@ interface IPaymnetHistory {
   transaction_amount: string;
 }
 [];
+
+interface Sender {
+  bank_code: string
+  bank_name: string
+  account_name: string
+  account_number: string
+}
+
+interface Transaction {
+  id: string
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+  transaction_reference: string
+  in_reference: string
+  out_reference: string | null
+  description: string
+  paymentType: string
+  paymentDate: string
+  transaction_type: string
+  transaction_category: string
+  sender: Sender
+  recipient: any | null
+  amount: string
+  currency: string
+  revenue_amount: string
+  tracker_amount: string
+  wallet_charges: string
+  gateway_fee_in: string
+  gateway_fee_out: string
+  wallet_before: string
+  wallet_after: string
+  status: string
+  meta: Record<string, any>
+}
+
+interface PaginationMeta {
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+}
+
+interface ApiResponse {
+  status: boolean
+  path: string
+  status_code: number
+  data: {
+    success: boolean
+    message: string
+    data: Transaction[]
+    meta: PaginationMeta
+  }
+}
+
+type PaymentType = "CVOF" | "FAREFLEX" | "ISCE" | "STICKER"
+
+interface TransactionFilters {
+  paymentType?: PaymentType
+  vehicleId?: string
+  page?: number
+  limit?: number
+}
+
+// New types for Revenue
+interface RevenueTotalResponse {
+  status: boolean
+  path: string
+  status_code: number
+  data: {
+    totalRevenue: number
+  }
+}
+
+interface RevenueCustomResponse {
+  status: boolean
+  path: string
+  status_code: number
+  data: {
+    customRevenue: number
+  }
+}
+
+interface RevenueDailyResponse {
+  status: boolean
+  path: string
+  status_code: number
+  data: {
+    dailyRevenue: number
+  }
+}
+
+interface RevenueWeeklyResponse {
+  status: boolean
+  path: string
+  status_code: number
+  data: {
+    weeklyRevenue: number
+  }
+}
+
+interface RevenueMonthlyResponse {
+  status: boolean
+  path: string
+  status_code: number
+  data: {
+    monthlyRevenue: number
+  }
+}
+
+interface RevenueYearlyResponse {
+  status: boolean
+  path: string
+  status_code: number
+  data: {
+    yearlyRevenue: number
+  }
+}
+
+type RevenueReportType = "total" | "custom" | "daily" | "weekly" | "monthly" | "yearly"
+
+interface RevenueFilters {
+  revenueCode?: string
+  reportType?: RevenueReportType
+  startDate?: string // YYYY-MM-DD
+  endDate?: string // YYYY-MM-DD
+  date?: string // YYYY-MM-DD
+  week?: string // YYYY-MM-DD (API expects this format for week)
+  month?: string // YYYY-MM-DD (API expects this format for month)
+  year?: string // YYYY-MM-DD (API expects this format for year)
+}
+

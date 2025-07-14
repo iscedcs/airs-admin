@@ -810,3 +810,16 @@ export const formatPhoneNumber = (value: string) => {
   // For any other input, prepend +234
   return "+234" + cleaned;
 };
+
+export const getRevenueCodeDisplayName = (code: string | undefined): string => {
+  switch (code) {
+    case "29001001-12040682":
+      return "Commercial Vehicle Operational Fee"
+    case "20008001-12040411":
+      return "FAREFLEX Operational Fee"
+    case "20008001-12040632":
+      return "ISCE Operational Fee"
+    default:
+      return "Unknown Revenue Code"
+  }
+}
