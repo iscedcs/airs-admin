@@ -898,7 +898,7 @@ interface ApiResponse {
   }
 }
 
-type PaymentType = "CVOF" | "FAREFLEX" | "ISCE" | "STICKER"
+type PaymentType = "CVOF" | "FAREFLEX" | "DEVICE"
 
 interface TransactionFilters {
   paymentType?: PaymentType

@@ -23,7 +23,7 @@ interface RevenuePageProps {
 const defaultRevenueCodes = [
   { label: "CVOF_REVENUE_CODE", code: "29001001-12040682" },
   { label: "FAREFLEX_REVENUE_CODE", code: "20008001-12040411" },
-  { label: "ISCE_REVENUE_CODE", code: "20008001-12040632" },
+  { label: "DEVICE_REVENUE_CODE", code: "20008001-12040632" },
 ]
 
 export default async function RevenuePage({ searchParams }: RevenuePageProps) {
