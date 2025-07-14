@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils"
 const revenueCodes = [
   { label: "CVOF_REVENUE_CODE", value: "29001001-12040682" },
   { label: "FAREFLEX_REVENUE_CODE", value: "20008001-12040411" },
-  { label: "ISCE_REVENUE_CODE", value: "20008001-12040632" },
+  { label: "DEVICE_REVENUE_CODE", value: "20008001-12040632" },
   // Add more revenue codes as needed
 ]
 
