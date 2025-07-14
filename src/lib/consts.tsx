@@ -5,6 +5,7 @@ import {
   Currency,
   List,
   Map,
+  Receipt,
   SettingsIcon,
 } from "lucide-react";
 import {
@@ -136,6 +137,11 @@ export const SIDEBAR_LINKS_ADMIN = [
     title: "Search",
     href: "/search",
     icon: searchIcon,
+  },
+  {
+    title: "Check Payment",
+    href: "/check-payment",
+    icon: <Receipt className="h-4 w-4" />,
   },
 ];
 export const SIDEBAR_LINKS_AGENT = [

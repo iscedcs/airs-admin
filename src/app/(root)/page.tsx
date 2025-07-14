@@ -35,27 +35,22 @@ export default async function DashboardAdmin() {
     redirect("/sign-in");
   }
   const userId = session.user.id;
-  const allAgents = await allUsers({ role: "AIRS_AGENT" });
-  const allVehicles = await allVehiclesCount();
-  const vehicleWithSticker = await allVehiclesWithStickerCount();
-  const myAgents = await getAgentRegisteredByAdminId({ userId });
+
+  const [CVOF, ISCE, FAREFLEX, allAgents, allVehicles, myAgents] =
+    await Promise.all([
+      getPaymentTotals({ revenueType: "CVOF" }),
+      getPaymentTotalsForStickers({ revenueType: "ISCE" }),
+      getPaymentTotals({ revenueType: "FAREFLEX" }),
+      allUsers({ role: "AIRS_AGENT" }),
+      allVehiclesCount(),
+      getAgentRegisteredByAdminId({ userId }),
+    ]);
+
   const newUsers =
     myAgents &&
     myAgents.success?.data.map(
       (item) => (item.meta as { user: any; newUser: any })?.newUser
     );
-
-  // const {
-  //   allTimeTotal,
-  //   yearToDateTotal,
-  //   monthToDateTotal,
-  //   weekToDateTotal,
-  //   dayToDateTotal,
-  // } = await getPaymentTotals();
-
-  const CVOF = await getPaymentTotals({ revenueType: "CVOF" });
-  const ISCE = await getPaymentTotalsForStickers({ revenueType: "ISCE" });
-  const FAREFLEX = await getPaymentTotals({ revenueType: "FAREFLEX" });
 
   const redenderRevenueCards = (
     data: any,
@@ -193,24 +188,6 @@ export default async function DashboardAdmin() {
             </CardContent>
           </Card>
         </Link>
-        {/* <Link href={"/vehicles"}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Verified Vehicles</CardTitle>
-              <CardDescription>Summary of verified vehicle</CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 px-2 py-4">
-              <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
-                <p className="font-bold leading-none">Total</p>
-                <p className="text-2xl text-muted-foreground">
-                  {vehicleWithSticker.success?.data === null
-                    ? "0"
-                    : vehicleWithSticker.success?.data}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link> */}
       </div>
       <div className="mb-20 flex flex-col gap-2">
         <DataTable
@@ -221,29 +198,6 @@ export default async function DashboardAdmin() {
           columns={agentsColumns}
           data={newUsers ?? []}
         />
-        {/* <div className="text-title1Bold md:text-h4Bold">
-                         Revenue & Statistics
-                    </div>
-                    <div className="rounded-3xl">
-                         <div className="grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3">
-                              {DATE_RANGE.map(
-                                   ({ type, title, description }, b) => (
-                                        <Suspense
-                                             key={b}
-                                             fallback={
-                                                  <Skeleton className="flex h-24 w-full flex-col justify-between rounded-2xl bg-secondary p-3 shadow-md" />
-                                             }
-                                        >
-                                             <RevenueAmountCard
-                                                  type={type}
-                                                  title={`${title} Revenue`}
-                                                  desc={description}
-                                             />
-                                        </Suspense>
-                                   ),
-                              )}
-                         </div>
-                    </div> */}
       </div>
     </div>
   );
