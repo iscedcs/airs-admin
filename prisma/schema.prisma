@@ -12,7 +12,7 @@ model PaymentNotifications {
   created_at        DateTime  @default(now()) @db.Timestamp(6)
   updated_at        DateTime  @default(now()) @db.Timestamp(6)
   deleted_at        DateTime? @db.Timestamp(6)
-  payment_reference String    @db.VarChar(100)
+  payment_reference String    @unique(map: "UQ_f7354be4a93e965f32cb4103b5c") @db.VarChar(100)
   customer_name     String    @db.VarChar(255)
   payment_date      DateTime  @db.Timestamp(6)
   tcode             String    @db.VarChar(50)
@@ -103,8 +103,10 @@ model users {
   identification                                          Json?
   asin_number                                             String?           @unique(map: "UQ_637e293b459c49b27d4ded49176") @db.VarChar
   companyId                                               String?           @db.Uuid
+  image                                                   String?           @db.VarChar
   api_keys                                                api_keys[]
   audit_trails                                            audit_trails[]
+  password_resets                                         password_resets?
   companies                                               companies?        @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_6f9395c9037632a31107c8a9e58")
   vehicle_waivers                                         vehicle_waivers[]
   waiver_requests_waiver_requests_decision_made_byTousers waiver_requests[] @relation("waiver_requests_decision_made_byTousers")
@@ -174,7 +176,7 @@ model vehicle_transactions {
   created_at            DateTime                                        @default(now()) @db.Timestamp(6)
   updated_at            DateTime                                        @default(now()) @db.Timestamp(6)
   deleted_at            DateTime?                                       @db.Timestamp(6)
-  transaction_reference String                                          @db.VarChar
+  transaction_reference String                                          @unique(map: "UQ_3b067f215f90e6f3de1dd840ccc") @db.VarChar
   in_reference          String                                          @db.VarChar
   out_reference         String?                                         @db.VarChar
   description           String                                          @default("") @db.VarChar
@@ -267,6 +269,7 @@ model vehicles {
   vehicleSettingId              String?                         @db.Uuid
   fairFlexDevId                 String?                         @unique(map: "UQ_d807c9f4d3bcce8fce632f2d57c") @db.VarChar
   fareFlexStartDate             DateTime?                       @db.Timestamp(6)
+  lgaId                         String?                         @db.Uuid
   LivePaymentNotifications      LivePaymentNotifications[]
   PaymentNotifications          PaymentNotifications[]
   audit_trails                  audit_trails[]
@@ -280,6 +283,7 @@ model vehicles {
   vehicle_waivers               vehicle_waivers[]
   vehicle_wallets               vehicle_wallets?
   vehicle_settings              vehicle_settings?               @relation(fields: [vehicleSettingId], references: [id], onUpdate: NoAction, map: "FK_8cc1ed6e729b568b20d45bb7b33")
+  lgas                          lgas?                           @relation(fields: [lgaId], references: [id], onUpdate: NoAction, map: "FK_90953cf8fb5df9ac03767bd0d64")
   vehicle_groups                vehicle_groups?                 @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d6b6975741c5c02da68987e06b2")
   companies                     companies?                      @relation(fields: [companyId], references: [id], onUpdate: NoAction, map: "FK_f5243d588524b2a705fcdf9b4d5")
   waiver_requests               waiver_requests[]
@@ -487,6 +491,29 @@ model waiver_requests {
   users_waiver_requests_decision_made_byTousers users?                      @relation("waiver_requests_decision_made_byTousers", fields: [decision_made_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_194662bc29d879c998955e2b13c")
   vehicles                                      vehicles?                   @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_45a4aace445b505286b880ae16e")
   users_waiver_requests_requestedByIdTousers    users?                      @relation("waiver_requests_requestedByIdTousers", fields: [requestedById], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_955ce3d0e699ce4610224ba523a")
+}
+
+model lgas {
+  id         String     @id(map: "PK_e20fcdd997f7da9347e007b5430") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime   @default(now()) @db.Timestamp(6)
+  updated_at DateTime   @default(now()) @db.Timestamp(6)
+  deleted_at DateTime?  @db.Timestamp(6)
+  name       String     @unique(map: "UQ_1b206868ffbbb097bec93aaeab1") @db.VarChar
+  fee        Json?
+  boundary   Json
+  vehicles   vehicles[]
+}
+
+model password_resets {
+  id        String   @id(map: "PK_4816377aa98211c1de34469e742") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId    String   @unique(map: "UQ_d95569f623f28a0bf034a55099e") @db.Uuid
+  email     String?  @unique(map: "UQ_7e57f540b334d522f9cf5b16ca5") @db.VarChar
+  phone     String?  @unique(map: "UQ_416907c6f83576756c037e7d5aa") @db.VarChar
+  resetCode String   @unique(map: "UQ_3c8a4200af243a4a7b4c94c5f9f") @db.VarChar
+  expiresAt DateTime @db.Timestamp(6)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_d95569f623f28a0bf034a55099e")
 }
 
 enum drivers_status_enum {

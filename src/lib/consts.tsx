@@ -1,4 +1,5 @@
 import CarouselSlides from "@/components/layout/carouselSlides";
+import { $Enums, users_role_enum } from "@prisma/client";
 import {
   ActivitySquareIcon,
   CarTaxiFront,
@@ -23,7 +24,6 @@ import {
   searchIcon,
   securityIcon,
 } from "./icons";
-import { $Enums, users_role_enum } from "@prisma/client";
 
 export const SIDEBAR_LINKS = [
   {
@@ -1728,9 +1728,12 @@ export const LGA = [
 // 	process.env.TEST_BACKEND_URL ||
 // 	'https://pig-crisp-logically.ngrok-free.app'; // Rex PC
 
-export const API =
-  process.env.LIVE_BACKEND_URL;
+export const API = process.env.LIVE_BACKEND_URL;
 export const URLS = {
+  payment_notification: {
+    count: "/api/v1/payment-notifications/counts",
+    custom_count: "/api/v1/payment-notifications/counts/custom-period",
+  },
   activity: {
     all: "/api/v1/activities",
   },

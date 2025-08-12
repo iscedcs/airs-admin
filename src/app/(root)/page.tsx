@@ -4,11 +4,9 @@ import {
   getPaymentTotalsForStickers,
 } from "@/actions/payment-notification";
 import { allUsers } from "@/actions/users";
-import {
-  allVehiclesCount,
-  allVehiclesWithStickerCount,
-} from "@/actions/vehicles";
+import { allVehiclesCount } from "@/actions/vehicles";
 import { options } from "@/app/api/auth/options";
+import PaymentNotificationCalendar from "@/components/shared/payment-notification";
 import {
   Card,
   CardContent,
@@ -130,6 +128,8 @@ export default async function DashboardAdmin() {
         </Tabs>
         <Separator className="my-5" />
       </div>
+      <Separator className="my-5" />
+      <PaymentNotificationCalendar />
       <Separator className="my-5" />
       <div className="grid grid-cols-1 mt-[20px] gap-5 md:grid-cols-2 lg:grid-cols-3">
         <Link href={"/agents"}>
