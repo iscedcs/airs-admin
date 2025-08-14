@@ -146,7 +146,7 @@ export default function PaymentNotificationCalendar() {
                 {`Number of payment notifications from ${formattedSingleDate}`}
               </p>
               <div className="">
-                {role === "SUPERADMIN" ? (
+                {role === "AIRS_ADMIN" ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 mt-5">
                     <NotificationCard
                       title="TOTAL"
