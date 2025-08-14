@@ -1,204 +1,204 @@
-import { getAgentRegisteredByAdminId } from "@/actions/audit-trails";
-import {
-  getPaymentTotals,
-  getPaymentTotalsForStickers,
-} from "@/actions/payment-notification";
-import { allUsers } from "@/actions/users";
-import { allVehiclesCount } from "@/actions/vehicles";
-import { options } from "@/app/api/auth/options";
-import PaymentNotificationCalendar from "@/components/shared/payment-notification";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import RevenueAmountCardNew from "@/components/ui/revenue-amount-card";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import { agentsColumns } from "@/components/ui/table/columns";
-import { DataTable } from "@/components/ui/table/data-table";
+"use client";
+
+import NotificationCard from "@/components/shared/notification-card";
+import { Calendar } from "@/components/ui/calendar";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getUser } from "@/lib/controller/users.controller";
-import { getServerSession } from "next-auth";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { Suspense } from "react";
+import { getPaymentNotificonCount } from "@/lib/controller/payment-notifications-count";
+import { useSession } from "next-auth/react";
+import React, { useEffect } from "react";
+import { DateRange } from "react-day-picker";
 
-export default async function DashboardAdmin() {
-  const session = await getServerSession(options);
-  const user = await getUser(session?.user.id!);
-  if (!session || !session.user || !user) {
-    redirect("/sign-in");
-  }
-  const userId = session.user.id;
+interface paymentNotificationType {
+  total: string;
+  categories: { cvof: string; fareflex: string; isce: string };
+}
 
-  const [CVOF, ISCE, FAREFLEX, allAgents, allVehicles, myAgents] =
-    await Promise.all([
-      getPaymentTotals({ revenueType: "CVOF" }),
-      getPaymentTotalsForStickers({ revenueType: "ISCE" }),
-      getPaymentTotals({ revenueType: "FAREFLEX" }),
-      allUsers({ role: "AIRS_AGENT" }),
-      allVehiclesCount(),
-      getAgentRegisteredByAdminId({ userId }),
-    ]);
-
-  const newUsers =
-    myAgents &&
-    myAgents.success?.data.map(
-      (item) => (item.meta as { user: any; newUser: any })?.newUser
-    );
-
-  const redenderRevenueCards = (
-    data: any,
-    revenueType: "CVOF" | "ISCE" | "FAREFLEX"
-  ) => (
-    <div className="grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-      <Suspense
-        fallback={
-          <Skeleton className="flex h-24 w-full flex-col justify-between rounded-2xl bg-secondary p-3 shadow-md" />
-        }
-      >
-        <RevenueAmountCardNew
-          link={`/`}
-          type="TOTAL"
-          title="All Time Revenue"
-          desc="All time"
-          total={Number(data.allTimeTotal)}
-        />
-        <RevenueAmountCardNew
-          link={`/history/yearly?revenue=${revenueType}`}
-          type="YEAR"
-          title="Year Till Date Revenue"
-          desc="Year till date"
-          total={Number(data.yearToDateTotal)}
-        />
-        <RevenueAmountCardNew
-          link={`/history/monthly?revenue=${revenueType}`}
-          type="MONTH"
-          title="Month Till Date Revenue"
-          desc="Month till date"
-          total={Number(data.monthToDateTotal)}
-        />
-        <RevenueAmountCardNew
-          link={`/history/weekly?revenue=${revenueType}`}
-          type="WEEK"
-          title="Week Till Date Revenue"
-          desc="Week till date"
-          total={Number(data.weekToDateTotal)}
-        />
-        <RevenueAmountCardNew
-          link={`/history/daily?revenue=${revenueType}`}
-          type="DAY"
-          title="Day Till Date Revenue"
-          desc="Day till date"
-          total={Number(data.dayToDateTotal)}
-        />
-      </Suspense>
-    </div>
+export default function PaymentNotificationCalendar() {
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: new Date(),
+    to: new Date(),
+  });
+  const [singleDate, setSingleDate] = React.useState<Date | undefined>(
+    new Date()
   );
 
+  // State for single date tab
+  const [singleTotals, setSingleTotals] = React.useState({
+    total: "0",
+    cvof: "0",
+    isce: "0",
+    fareflex: "0",
+  });
+
+  // State for range tab
+  const [rangeTotals, setRangeTotals] = React.useState({
+    total: "0",
+    cvof: "0",
+    isce: "0",
+    fareflex: "0",
+  });
+
+  // const [role, setRole] = useState<string>();
+
+  // useEffect(() => {
+  //   const roleSet = async () => {
+  //     const session = await getServerSession(options);
+  //     const role = session?.user?.role;
+
+  //     setRole(role);
+  //   };
+
+  //   roleSet();
+  // }, []);
+
+  const { data: session } = useSession();
+
+  const role = session?.user.role;
+  console.log({ role });
+
+  const fetchNotifications = async (
+    start: Date,
+    end: Date
+  ): Promise<paymentNotificationType> => {
+    return await getPaymentNotificonCount({
+      startDate: start,
+      endDate: end,
+    });
+  };
+
+  // Fetch for range
+  useEffect(() => {
+    if (!dateRange?.from) return;
+    const startDate = new Date(dateRange.from.setHours(0, 0, 0, 0));
+    const endDate = new Date(
+      (dateRange.to ?? dateRange.from).setHours(23, 59, 59, 999)
+    );
+
+    fetchNotifications(startDate, endDate).then((data) => {
+      setRangeTotals({
+        total: data?.total ?? "N/A",
+        cvof: data?.categories?.cvof ?? "N/A",
+        isce: data?.categories?.isce ?? "N/A",
+        fareflex: data?.categories?.fareflex ?? "N/A",
+      });
+    });
+  }, [dateRange]);
+
+  // Fetch for single date
+  useEffect(() => {
+    if (!singleDate) return;
+    const startDate = new Date(singleDate.setHours(0, 0, 0, 0));
+    const endDate = new Date(singleDate.setHours(23, 59, 59, 999));
+
+    fetchNotifications(startDate, endDate).then((data) => {
+      setSingleTotals({
+        total: data?.total ?? "N/A",
+        cvof: data?.categories?.cvof ?? "N/A",
+        isce: data?.categories?.isce ?? "N/A",
+        fareflex: data?.categories?.fareflex ?? "N/A",
+      });
+    });
+  }, [singleDate]);
+
+  const formattedDateRange =
+    dateRange?.from && dateRange?.to
+      ? dateRange.from.toDateString() === dateRange.to.toDateString()
+        ? dateRange.from.toDateString()
+        : `${dateRange.from.toDateString()} - ${dateRange.to.toDateString()}`
+      : dateRange?.from
+      ? dateRange.from.toDateString()
+      : "No date selected";
+
+  const formattedSingleDate = singleDate
+    ? singleDate.toDateString()
+    : "No date selected";
+
   return (
-    <div className="p-5">
-      <div className="">
-        <div className="text-title2Bold md:text-h5Bold">
-          Welcome Back, {user?.name ?? "User"}
-        </div>
-      </div>
-      <div className=" w-full">
-        <Tabs defaultValue="cvof">
-          <TabsList className="mb-5">
-            <TabsTrigger value="cvof">CVOF</TabsTrigger>
-            <TabsTrigger value="isce">Sticker Payment</TabsTrigger>
-            <TabsTrigger value="fareflex">Fareflex Payment</TabsTrigger>
-          </TabsList>
+    <div className="w-full">
+      <p className="font-bold">Number of payment notifications</p>
+      <Tabs defaultValue="single">
+        <TabsList>
+          <TabsTrigger value="single">Single Date</TabsTrigger>
+          <TabsTrigger value="range">Date Range</TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="cvof">
-            {redenderRevenueCards(CVOF, "CVOF")}
-          </TabsContent>
+        {/* Single date */}
+        <TabsContent value="single">
+          <div className="mt-3 flex flex-col md:flex-row gap-3">
+            <div>
+              <Calendar
+                mode="single"
+                selected={singleDate}
+                onSelect={(date) => {
+                  if (!date) {
+                    setSingleDate(undefined);
+                    return;
+                  }
+                  setSingleDate(date);
+                }}
+                className="rounded-md border shadow-sm w-full"
+                captionLayout="dropdown"
+              />
+            </div>
+            <Card className="p-5 flex-1">
+              <p className="text-sm sm:text-base">
+                {`Number of payment notifications from ${formattedSingleDate}`}
+              </p>
+              <div className="">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 mt-5">
+                  <NotificationCard
+                    title="CVOF"
+                    value={
+                      formattedDateRange === "No date selected"
+                        ? "0"
+                        : rangeTotals.cvof
+                    }
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+        </TabsContent>
 
-          <TabsContent value="isce">
-            {redenderRevenueCards(ISCE, "ISCE")}
-          </TabsContent>
-
-          <TabsContent value="fareflex">
-            {redenderRevenueCards(FAREFLEX, "FAREFLEX")}
-          </TabsContent>
-        </Tabs>
-        <Separator className="my-5" />
-      </div>
-      <Separator className="my-5" />
-      <PaymentNotificationCalendar />
-      <Separator className="my-5" />
-      <div className="grid grid-cols-1 mt-[20px] gap-5 md:grid-cols-2 lg:grid-cols-3">
-        <Link href={"/agents"}>
-          <Card>
-            <CardHeader>
-              <CardTitle>AIRS Agents</CardTitle>
-              <CardDescription>All AIRS Agents</CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 px-2 py-4">
-              <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
-                <p className="font-bold leading-none">Total</p>
-                <p className="text-2xl text-muted-foreground">
-                  {allAgents.success?.totalUsers == null
-                    ? "0"
-                    : allAgents.success?.totalUsers}
-                </p>
+        {/* Date range */}
+        <TabsContent value="range">
+          <div className="mt-3 flex flex-col md:flex-row gap-3">
+            <div>
+              <Calendar
+                mode="range"
+                selected={dateRange}
+                onSelect={(range) => {
+                  if (!range?.from) {
+                    setDateRange(undefined);
+                    return;
+                  }
+                  setDateRange(range);
+                }}
+                className="rounded-md border shadow-sm w-full"
+                captionLayout="dropdown"
+              />
+            </div>
+            <Card className="p-5 flex-1">
+              <p className="text-sm sm:text-base">
+                {`Number of payment notifications from ${formattedDateRange}`}
+              </p>
+              <div className="">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 mt-5">
+                  <NotificationCard
+                    title="CVOF"
+                    value={
+                      formattedDateRange === "No date selected"
+                        ? "0"
+                        : rangeTotals.cvof
+                    }
+                  />
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href={"/my-agents?page=1&limit=15"}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Registered AIRS Agents</CardTitle>
-              <CardDescription>
-                All AIRS Agents registered by you
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 px-2 py-4">
-              <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
-                <p className="font-bold leading-none">Total</p>
-                <p className="text-2xl text-muted-foreground">
-                  {myAgents.success?.totalAgents == null
-                    ? "0"
-                    : myAgents.success?.totalAgents}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href={"/vehicles"}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Vehicles</CardTitle>
-              <CardDescription>Summary of vehicle details</CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 px-2 py-4">
-              <div className="pointer-events-none relative grid gap-2 rounded-md border border-primary bg-secondary p-2">
-                <p className="font-bold leading-none">Total</p>
-                <p className="text-2xl text-muted-foreground">
-                  {allVehicles.success?.data === null
-                    ? "0"
-                    : allVehicles.success?.data}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
-      <div className="mb-20 flex flex-col gap-2">
-        <DataTable
-          showSearch
-          searchWith="name"
-          searchWithPlaceholder="Search with name"
-          showColumns
-          columns={agentsColumns}
-          data={newUsers ?? []}
-        />
-      </div>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
