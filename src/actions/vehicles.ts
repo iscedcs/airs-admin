@@ -1,6 +1,8 @@
 "use server";
 
+import { API } from "@/lib/consts";
 import { db } from "@/lib/db";
+import { getSSession } from "@/lib/get-data";
 import {
   Prisma,
   vehicle_transactions_transaction_category_enum,
@@ -79,38 +81,48 @@ export async function getVehicles(
   };
 }
 
-export const allVehicles = async ({
+export const getAllVehicles = async ({
   page = 1,
-  pageSize = 10,
-}: FetchVehicleParams) => {
+  pageSize = 20,
+  search,
+  blacklisted = false,
+}: FetchVehicleParams & { search?: string; blacklisted?: boolean } = {}) => {
   try {
-    // Calculate the offset for pagination
-    const skip = (page - 1) * pageSize;
+    // Get the access token from cookies (adjust the cookie name as needed)
+    const { access_token } = await getSSession();
+    const token = access_token;
+    if (!token) {
+      return { error: "No access token found" };
+    }
 
-    const query = {
-      skip,
-      take: pageSize,
-      // select: {
-      //      id: true,
-      //      created_at: true,
-      //      updated_at: true,
-      //      deleted_at: true,
-      // },
-      where: {}, // Default empty filter
-    };
+    // Build query params
+    const params = new URLSearchParams();
+    params.append("page", String(page));
+    params.append("limit", String(pageSize));
+    params.append("blacklisted", String(blacklisted));
+    if (search) params.append("search", search);
 
-    const vehicles = await db.vehicles.findMany(query);
+    const res = await fetch(`${API}/api/v1/vehicles?${params.toString()}`, {
+      headers: {
+        accept: "*/*",
+        Authorization: `Bearer ${token}`,
+      },
+      next: { revalidate: 60 }, // cache for 1 minute
+    });
 
-    // Fetch the total number of vehicles with the same role (or all vehicles if no role filter)
-    const totalVehicles = await db.vehicles.count();
+    if (!res.ok) {
+      return { error: "Failed to fetch vehicles" };
+    }
+
+    const json = await res.json();
 
     return {
       success: {
         message: "OKAY",
-        data: vehicles,
-        totalVehicles, // Total count of vehicles with the current filter
-        currentPage: page,
-        totalPages: Math.ceil(totalVehicles / pageSize), // Calculate total pages for front-end
+        data: json.data.rows,
+        totalVehicles: json.data.meta.total,
+        currentPage: json.data.meta.page,
+        totalPages: json.data.meta.total_pages,
       },
     };
   } catch (error) {

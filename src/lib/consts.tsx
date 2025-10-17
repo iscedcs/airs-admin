@@ -1777,9 +1777,16 @@ export const URLS = {
     all: "/api/v1/drivers",
     blacklist: "/api/v1/drivers/blacklist", // add vehicle to blacklist
   },
+
   revenue: {
     stats: "/api/v1/revenue/stats",
     report: "/api/v1/revenue/report",
+    total: "/api/v1/revenue/total",
+    custom: "/api/v1/revenue/customRevenue",
+    day: "/api/v1/revenue/daily",
+    week: "/api/v1/revenue/weekly",
+    month: "/api/v1/revenue/monthly",
+    year: "/api/v1/revenue/yearly",
   },
   vehicle: {
     all: "/api/v1/vehicles",
@@ -2301,3 +2308,9 @@ export const ADMIN_ROLES: string[] = [
   $Enums.users_role_enum.SUPERADMIN,
   $Enums.users_role_enum.ADMIN,
 ];
+
+export const REVENUE_TYPES = {
+  CVOF: "29001001-12040682",
+  FAREFLEX: "20008001-12040411",
+  ISCE: "20008001-12040632",
+};
