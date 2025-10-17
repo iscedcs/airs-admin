@@ -2,7 +2,7 @@
 import { options } from "@/app/api/auth/options";
 import { API } from "@/lib/consts";
 import { db } from "@/lib/db";
-import { PaymentNotifications, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { format } from "date-fns";
 import moment from "moment";
 import { getServerSession } from "next-auth";
@@ -82,9 +82,14 @@ export async function getPaymentNotifications(
     }),
     db.paymentNotifications.count({ where }),
   ]);
+  // Convert Decimal amounts to numbers for client components
+  const serializedNotifications = notifications.map((notification) => ({
+    ...notification,
+    amount: Number(notification.amount),
+  }));
 
   return {
-    notifications,
+    notifications: serializedNotifications,
     pagination: {
       page,
       pageSize,
@@ -119,8 +124,13 @@ export async function getPaymentNotificationsByTcode(
     db.paymentNotifications.count({ where: { tcode } }),
   ]);
 
+  const serializedNotifications = notifications.map((notification) => ({
+    ...notification,
+    amount: Number(notification.amount),
+  }));
+
   return {
-    notifications,
+    notifications: serializedNotifications,
     pagination: {
       page,
       pageSize,
@@ -166,8 +176,14 @@ export async function getPaymentNotificationsByRevenueCode(
     db.paymentNotifications.count({ where: { revenue_code: revenueCode } }),
   ]);
 
+  // Convert Decimal amounts to numbers for client components
+  const serializedNotifications = notifications.map((notification) => ({
+    ...notification,
+    amount: Number(notification.amount),
+  }));
+
   return {
-    notifications,
+    notifications: serializedNotifications,
     pagination: {
       page,
       pageSize,
@@ -618,8 +634,21 @@ export async function getChatData(
 }
 
 export type PaymentType = "cvof" | "device-maintenance" | "fareflex";
+
+// Serialized version of PaymentNotifications for client components
+export type SerializedPaymentNotification = {
+  id: string;
+  amount: number; // Converted from Decimal to number
+  customer_name: string;
+  payment_date: Date;
+  revenue_name?: string;
+  revenue_code?: string;
+  tcode?: string;
+  payment_reference?: string;
+};
+
 export type PaymentData = {
-  payments: PaymentNotifications[];
+  payments: SerializedPaymentNotification[];
   dailyTotal: number;
 };
 
@@ -680,7 +709,7 @@ export async function getDailyTotal(type: PaymentType): Promise<number> {
 export async function getLatestTransactions(
   type: PaymentType,
   limit = 20
-): Promise<PaymentNotifications[]> {
+): Promise<SerializedPaymentNotification[]> {
   try {
     // Get the revenue code for this payment type
     const revenueCode = REVENUE_CODE_MAP[type];
@@ -692,10 +721,19 @@ export async function getLatestTransactions(
       orderBy: {
         created_at: "desc",
       },
+      select: {
+        id: true,
+        amount: true,
+        customer_name: true,
+        payment_date: true,
+      },
       take: limit,
     });
 
-    return payments;
+    return payments.map((payment) => ({
+      ...payment,
+      amount: Number(payment.amount),
+    }));
   } catch (error) {
     console.error(`Error fetching transactions for ${type}:`, error);
     return [];
